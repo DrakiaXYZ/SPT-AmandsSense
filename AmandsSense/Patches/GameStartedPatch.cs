@@ -16,8 +16,9 @@ namespace AmandsSense.Patches
         [PatchPostfix]
         public static void PatchPostfix(GameWorld __instance)
         {
-            AmandsSensePlugin.AmandsSenseClassComponent = __instance.gameObject.AddComponent<AmandsSenseClass>();
-            AmandsSenseClass.SenseAudioSource = __instance.gameObject.AddComponent<AudioSource>();
+            var senseClass = __instance.gameObject.AddComponent<AmandsSenseClass>();
+            var senseAudioSource = __instance.gameObject.AddComponent<AudioSource>();
+            senseClass.Initialize(senseAudioSource);
         }
     }
 }

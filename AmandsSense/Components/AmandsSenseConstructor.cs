@@ -2,6 +2,7 @@
 using AmandsSense.Helpers;
 using EFT;
 using EFT.Interactive;
+using EFT.InventoryLogic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -93,6 +94,39 @@ namespace AmandsSense.Components
             descriptionText.text = "";
             descriptionText.color = new Color(textColor.r, textColor.g, textColor.b, 0f);
         }
+
+        protected SenseItemColor GetItemColor(Item item, SenseItemColor currentColor)
+        {
+            SenseItemColor senseItemColor = currentColor;
+
+            // Priority order: Rare, Wishlist, Non-Flea, Kappa
+            if (senseItemColor == SenseItemColor.Rare || AmandsSenseClass.itemsJsonClass.RareItems.Contains(item.TemplateId))
+            {
+                return SenseItemColor.Rare;
+            }
+            else if (senseItemColor == SenseItemColor.WishList || AmandsSenseClass.Player.Profile.WishlistManager.IsInWishlist(item.TemplateId, true, out var _))
+            {
+                return SenseItemColor.WishList;
+            }
+            else if (senseItemColor == SenseItemColor.NonFlea || (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId)))
+            {
+                if (!Settings.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
+                {
+                    return senseItemColor;
+                }
+                else if (Settings.EnableFlea.Value)
+                {
+                    return SenseItemColor.NonFlea;
+                }
+            }
+            else if (senseItemColor == SenseItemColor.Kappa || AmandsSenseClass.itemsJsonClass.KappaItems.Contains(item.TemplateId) && senseItemColor == SenseItemColor.Default)
+            {
+                return SenseItemColor.Kappa;
+            }
+
+            return senseItemColor;
+        }
+
         virtual public void SetSense(ObservedLootItem observedLootItem)
         {
 

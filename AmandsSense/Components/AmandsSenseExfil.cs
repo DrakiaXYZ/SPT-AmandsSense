@@ -33,6 +33,7 @@ namespace AmandsSense.Components
         public bool UpdateIntensity = false;
         public bool Starting = true;
         public float Intensity = 0f;
+        private float lastDrawUpdateTime = 0f;
 
         public void SetSense(ExfiltrationPoint ExfiltrationPoint)
         {
@@ -323,11 +324,16 @@ namespace AmandsSense.Components
                     UpdateIntensity = true;
                 }
             }
+
+            lastDrawUpdateTime += Time.deltaTime;
             if (Camera.main != null)
             {
                 transform.LookAt(new Vector3(Camera.main.transform.position.x, transform.position.y, Camera.main.transform.position.z));
-                if (distanceText != null)
+
+                // Only update the distance every second to avoid excess memory allocations
+                if (lastDrawUpdateTime >= 1.0f && distanceText != null)
                 {
+                    lastDrawUpdateTime = 0f;
                     distanceText.text = (int)Vector3.Distance(transform.position, Camera.main.transform.position) + "m";
                 }
             }

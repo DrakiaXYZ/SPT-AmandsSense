@@ -37,42 +37,12 @@ namespace AmandsSense.Components
                     CompoundItem lootItemClass = lootableContainer.ItemOwner.RootItem as CompoundItem;
                     if (lootItemClass != null)
                     {
-                        object[] Grids = Traverse.Create(lootItemClass).Field("Grids").GetValue<object[]>();
-                        if (Grids != null)
+                        foreach (StashGridClass grid in lootItemClass.Grids)
                         {
-                            foreach (object grid in Grids)
+                            foreach (Item item in grid.Items)
                             {
-                                IEnumerable<Item> Items = Traverse.Create(grid).Property("Items").GetValue<IEnumerable<Item>>();
-                                if (Items != null)
-                                {
-                                    foreach (Item item in Items)
-                                    {
-                                        itemCount += 1;
-                                        if (AmandsSenseClass.itemsJsonClass.RareItems.Contains(item.TemplateId))
-                                        {
-                                            senseItemColor = SenseItemColor.Rare;
-                                        }
-                                        else if (AmandsSenseClass.Player.Profile.WishlistManager.IsInWishlist(item.TemplateId, true, out var _) && senseItemColor != SenseItemColor.Rare)
-                                        {
-                                            senseItemColor = SenseItemColor.WishList;
-                                        }
-                                        else if (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId) && senseItemColor != SenseItemColor.Rare && senseItemColor != SenseItemColor.WishList)
-                                        {
-                                            if (!Settings.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
-                                            {
-                                                continue;
-                                            }
-                                            else if (Settings.EnableFlea.Value)
-                                            {
-                                                senseItemColor = SenseItemColor.NonFlea;
-                                            }
-                                        }
-                                        else if (AmandsSenseClass.itemsJsonClass.KappaItems.Contains(item.TemplateId) && senseItemColor == SenseItemColor.Default)
-                                        {
-                                            senseItemColor = SenseItemColor.Kappa;
-                                        }
-                                    }
-                                }
+                                itemCount += 1;
+                                senseItemColor = GetItemColor(item, senseItemColor);
                             }
                         }
                     }
@@ -204,42 +174,12 @@ namespace AmandsSense.Components
                     CompoundItem lootItemClass = lootableContainer.ItemOwner.RootItem as CompoundItem;
                     if (lootItemClass != null)
                     {
-                        object[] Grids = Traverse.Create(lootItemClass).Field("Grids").GetValue<object[]>();
-                        if (Grids != null)
+                        foreach (StashGridClass grid in lootItemClass.Grids)
                         {
-                            foreach (object grid in Grids)
+                            foreach (Item item in grid.Items)
                             {
-                                IEnumerable<Item> Items = Traverse.Create(grid).Property("Items").GetValue<IEnumerable<Item>>();
-                                if (Items != null)
-                                {
-                                    foreach (Item item in Items)
-                                    {
-                                        itemCount += 1;
-                                        if (AmandsSenseClass.itemsJsonClass.RareItems.Contains(item.TemplateId))
-                                        {
-                                            senseItemColor = SenseItemColor.Rare;
-                                        }
-                                        else if (AmandsSenseClass.Player.Profile.WishlistManager.IsInWishlist(item.TemplateId, true, out var _) && senseItemColor != SenseItemColor.Rare)
-                                        {
-                                            senseItemColor = SenseItemColor.WishList;
-                                        }
-                                        else if (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId) && senseItemColor != SenseItemColor.Rare && senseItemColor != SenseItemColor.WishList)
-                                        {
-                                            if (!Settings.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
-                                            {
-                                                continue;
-                                            }
-                                            else if (Settings.EnableFlea.Value)
-                                            {
-                                                senseItemColor = SenseItemColor.NonFlea;
-                                            }
-                                        }
-                                        else if (AmandsSenseClass.itemsJsonClass.KappaItems.Contains(item.TemplateId) && senseItemColor == SenseItemColor.Default)
-                                        {
-                                            senseItemColor = SenseItemColor.Kappa;
-                                        }
-                                    }
-                                }
+                                itemCount += 1;
+                                senseItemColor = GetItemColor(item, senseItemColor);
                             }
                         }
                     }

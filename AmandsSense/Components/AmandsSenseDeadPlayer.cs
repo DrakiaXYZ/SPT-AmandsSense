@@ -43,74 +43,44 @@ namespace AmandsSense.Components
                                 Name = DeadPlayer.Profile.Nickname;
                                 break;
                             case EPlayerSide.Savage:
-                                RoleName = AmandsSenseHelper.Localized(AmandsSenseHelper.GetScavRoleKey(Traverse.Create(Traverse.Create(DeadPlayer.Profile.Info).Field("Settings").GetValue<object>()).Field("Role").GetValue<WildSpawnType>()), EStringCase.Upper);
+                                RoleName = AmandsSenseHelper.Localized(DeadPlayer.Profile.Info.Settings.Role.GetScavRoleKey(), EStringCase.Upper);
                                 Name = AmandsSenseHelper.Transliterate(DeadPlayer.Profile.Nickname);
                                 break;
                         }
-                        object Inventory = Traverse.Create(DeadPlayer.Profile).Field("Inventory").GetValue();
-                        if (Inventory != null)
+                        foreach (Item item in DeadPlayer.Profile.Inventory.AllRealPlayerItems)
                         {
-                            IEnumerable<Item> AllRealPlayerItems = Traverse.Create(Inventory).Property("AllRealPlayerItems").GetValue<IEnumerable<Item>>();
-                            if (AllRealPlayerItems != null)
+                            if (item.CurrentAddress != null)
                             {
-                                foreach (Item item in AllRealPlayerItems)
+                                if (item.Parent.Container != null && item.Parent.Container.ParentItem != null && TemplateIdToObjectMappingsClass.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(item.Parent.Container.ParentItem.GetType()))
                                 {
-                                    if (item.CurrentAddress != null)
+                                    continue;
+                                }
+                                Slot slot = item.Parent.Container as Slot;
+                                if (slot != null)
+                                {
+                                    if (slot.Name == "Dogtag")
                                     {
-                                        if (item.Parent.Container != null && item.Parent.Container.ParentItem != null && TemplateIdToObjectMappingsClass.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(item.Parent.Container.ParentItem.GetType()))
-                                        {
-                                            continue;
-                                        }
-                                        Slot slot = item.Parent.Container as Slot;
-                                        if (slot != null)
-                                        {
-                                            if (slot.Name == "Dogtag")
-                                            {
-                                                continue;
-                                            }
-                                            if (slot.Name == "SecuredContainer")
-                                            {
-                                                continue;
-                                            }
-                                            if (slot.Name == "Scabbard")
-                                            {
-                                                continue;
-                                            }
-                                            if (slot.Name == "ArmBand")
-                                            {
-                                                continue;
-                                            }
-                                        }
+                                        continue;
                                     }
-                                    if (emptyDeadPlayer)
+                                    if (slot.Name == "SecuredContainer")
                                     {
-                                        emptyDeadPlayer = false;
+                                        continue;
                                     }
-                                    if (AmandsSenseClass.itemsJsonClass.RareItems.Contains(item.TemplateId))
+                                    if (slot.Name == "Scabbard")
                                     {
-                                        senseItemColor = SenseItemColor.Rare;
+                                        continue;
                                     }
-                                    else if (AmandsSenseClass.Player.Profile.WishlistManager.IsInWishlist(item.TemplateId, true, out var _) && senseItemColor != SenseItemColor.Rare)
+                                    if (slot.Name == "ArmBand")
                                     {
-                                        senseItemColor = SenseItemColor.WishList;
-                                    }
-                                    else if (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId) && senseItemColor != SenseItemColor.Rare && senseItemColor != SenseItemColor.WishList)
-                                    {
-                                        if (!Settings.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
-                                        {
-                                            continue;
-                                        }
-                                        else if (Settings.EnableFlea.Value)
-                                        {
-                                            senseItemColor = SenseItemColor.NonFlea;
-                                        }
-                                    }
-                                    else if (AmandsSenseClass.itemsJsonClass.KappaItems.Contains(item.TemplateId) && senseItemColor == SenseItemColor.Default)
-                                    {
-                                        senseItemColor = SenseItemColor.Kappa;
+                                        continue;
                                     }
                                 }
                             }
+                            if (emptyDeadPlayer)
+                            {
+                                emptyDeadPlayer = false;
+                            }
+                            senseItemColor = GetItemColor(item, senseItemColor);
                         }
                     }
                 }
@@ -210,7 +180,7 @@ namespace AmandsSense.Components
         }
         public override void UpdateSense()
         {
-            if (DeadPlayer != null && DeadPlayer.gameObject.activeSelf)// && bodyPartCollider != null && bodyPartCollider.gameObject.activeSelf && bodyPartCollider.Collider != null && AmandsSenseClass.localPlayer != null && bodyPartCollider.Collider.transform.position.y > AmandsSenseClass.localPlayer.Position.y + Settings.MinHeight.Value && bodyPartCollider.Collider.transform.position.y < AmandsSenseClass.localPlayer.Position.y + Settings.MaxHeight.Value)
+            if (DeadPlayer != null && DeadPlayer.gameObject.activeSelf)
             {
                 // SenseDeadPlayer Defaults
                 emptyDeadPlayer = false;
@@ -218,72 +188,42 @@ namespace AmandsSense.Components
 
                 if (AmandsSenseClass.itemsJsonClass != null && AmandsSenseClass.itemsJsonClass.RareItems != null && AmandsSenseClass.itemsJsonClass.KappaItems != null && AmandsSenseClass.itemsJsonClass.NonFleaExclude != null && AmandsSenseClass.Player != null && AmandsSenseClass.Player.Profile != null && AmandsSenseClass.Player.Profile.WishlistManager != null)
                 {
-                    if (DeadPlayer != null && DeadPlayer.Profile != null)
+                    if (DeadPlayer.Profile != null)
                     {
-                        object Inventory = Traverse.Create(DeadPlayer.Profile).Field("Inventory").GetValue();
-                        if (Inventory != null)
+                        foreach (Item item in DeadPlayer.Profile.Inventory.AllRealPlayerItems)
                         {
-                            IEnumerable<Item> AllRealPlayerItems = Traverse.Create(Inventory).Property("AllRealPlayerItems").GetValue<IEnumerable<Item>>();
-                            if (AllRealPlayerItems != null)
+                            if (item.CurrentAddress != null)
                             {
-                                foreach (Item item in AllRealPlayerItems)
+                                if (item.Parent.Container != null && item.Parent.Container.ParentItem != null && TemplateIdToObjectMappingsClass.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(item.Parent.Container.ParentItem.GetType()))
                                 {
-                                    if (item.CurrentAddress != null)
+                                    continue;
+                                }
+                                Slot slot = item.Parent.Container as Slot;
+                                if (slot != null)
+                                {
+                                    if (slot.Name == "Dogtag")
                                     {
-                                        if (item.Parent.Container != null && item.Parent.Container.ParentItem != null && TemplateIdToObjectMappingsClass.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(item.Parent.Container.ParentItem.GetType()))
-                                        {
-                                            continue;
-                                        }
-                                        Slot slot = item.Parent.Container as Slot;
-                                        if (slot != null)
-                                        {
-                                            if (slot.Name == "Dogtag")
-                                            {
-                                                continue;
-                                            }
-                                            if (slot.Name == "SecuredContainer")
-                                            {
-                                                continue;
-                                            }
-                                            if (slot.Name == "Scabbard")
-                                            {
-                                                continue;
-                                            }
-                                            if (slot.Name == "ArmBand")
-                                            {
-                                                continue;
-                                            }
-                                        }
+                                        continue;
                                     }
-                                    if (emptyDeadPlayer)
+                                    if (slot.Name == "SecuredContainer")
                                     {
-                                        emptyDeadPlayer = false;
+                                        continue;
                                     }
-                                    if (AmandsSenseClass.itemsJsonClass.RareItems.Contains(item.TemplateId))
+                                    if (slot.Name == "Scabbard")
                                     {
-                                        senseItemColor = SenseItemColor.Rare;
+                                        continue;
                                     }
-                                    else if (AmandsSenseClass.Player.Profile.WishlistManager.IsInWishlist(item.TemplateId, true, out var _) && senseItemColor != SenseItemColor.Rare)
+                                    if (slot.Name == "ArmBand")
                                     {
-                                        senseItemColor = SenseItemColor.WishList;
-                                    }
-                                    else if (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId) && senseItemColor != SenseItemColor.Rare && senseItemColor != SenseItemColor.WishList)
-                                    {
-                                        if (!Settings.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
-                                        {
-                                            continue;
-                                        }
-                                        else if (Settings.EnableFlea.Value)
-                                        {
-                                            senseItemColor = SenseItemColor.NonFlea;
-                                        }
-                                    }
-                                    else if (AmandsSenseClass.itemsJsonClass.KappaItems.Contains(item.TemplateId) && senseItemColor == SenseItemColor.Default)
-                                    {
-                                        senseItemColor = SenseItemColor.Kappa;
+                                        continue;
                                     }
                                 }
                             }
+                            if (emptyDeadPlayer)
+                            {
+                                emptyDeadPlayer = false;
+                            }
+                            senseItemColor = GetItemColor(item, senseItemColor);
                         }
                     }
                 }

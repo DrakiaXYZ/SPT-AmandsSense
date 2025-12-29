@@ -14,7 +14,6 @@ namespace AmandsSense.Components
     public class AmandsSenseItem : AmandsSenseConstructor
     {
         private ObservedLootItem observedLootItem;
-        private string itemId;
         private string type;
 
         public SenseItemType senseItemType = SenseItemType.All;
@@ -27,9 +26,17 @@ namespace AmandsSense.Components
             observedLootItem = ObservedLootItem;
             if (observedLootItem != null && observedLootItem.gameObject.activeSelf && observedLootItem.Item != null)
             {
-                AmandsSenseClass.SenseItems.Add(observedLootItem.Item);
+                // If this item has 0 durability, don't show it
+                if (observedLootItem.Item.TryGetItemComponent(out RepairableComponent repairableComponentCheck))
+                {
+                    if ((int)repairableComponentCheck.Durability == 0)
+                    {
+                        amandsSenseWorld.CancelSense();
+                        return;
+                    }
+                }
 
-                itemId = observedLootItem.ItemId;
+                AmandsSenseClass.SenseItems.Add(observedLootItem.Item);
 
                 // Weapon SenseItem Color, Sprite and Type
                 Weapon weapon = observedLootItem.Item as Weapon;
@@ -542,24 +549,20 @@ namespace AmandsSense.Components
                     // SenseItem Description
                     if (descriptionText != null)
                     {
-                        FoodDrinkComponent foodDrinkComponent;
-                        if (observedLootItem.Item.TryGetItemComponent(out foodDrinkComponent) && ((int)foodDrinkComponent.MaxResource) > 1)
+                        if (observedLootItem.Item.TryGetItemComponent(out FoodDrinkComponent foodDrinkComponent) && ((int)foodDrinkComponent.MaxResource) > 1)
                         {
                             descriptionText.text = ((int)foodDrinkComponent.HpPercent) + "/" + ((int)foodDrinkComponent.MaxResource);
                         }
-                        KeyComponent keyComponent;
-                        if (observedLootItem.Item.TryGetItemComponent(out keyComponent))
+                        if (observedLootItem.Item.TryGetItemComponent(out KeyComponent keyComponent))
                         {
-                            int MaximumNumberOfUsage = Traverse.Create(Traverse.Create(keyComponent).Field("Template").GetValue<object>()).Field("MaximumNumberOfUsage").GetValue<int>();
-                            descriptionText.text = (MaximumNumberOfUsage - keyComponent.NumberOfUsages) + "/" + MaximumNumberOfUsage;
+                            int maximumNumberOfUsages = keyComponent.Template.MaximumNumberOfUsage;
+                            descriptionText.text = (maximumNumberOfUsages - keyComponent.NumberOfUsages) + "/" + maximumNumberOfUsages;
                         }
-                        MedKitComponent medKitComponent;
-                        if (observedLootItem.Item.TryGetItemComponent(out medKitComponent) && medKitComponent.MaxHpResource > 1)
+                        if (observedLootItem.Item.TryGetItemComponent(out MedKitComponent medKitComponent) && medKitComponent.MaxHpResource > 1)
                         {
                             descriptionText.text = ((int)medKitComponent.HpResource) + "/" + medKitComponent.MaxHpResource;
                         }
-                        RepairableComponent repairableComponent;
-                        if (observedLootItem.Item.TryGetItemComponent(out repairableComponent))
+                        if (observedLootItem.Item.TryGetItemComponent(out RepairableComponent repairableComponent))
                         {
                             descriptionText.text = ((int)repairableComponent.Durability) + "/" + ((int)repairableComponent.MaxDurability);
                         }

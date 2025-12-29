@@ -11,7 +11,6 @@ namespace AmandsSense
     public class AmandsSensePlugin : BaseUnityPlugin
     {
         public static string PluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        public static AmandsSenseClass AmandsSenseClassComponent;
 
         public void Start()
         {

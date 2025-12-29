@@ -1,6 +1,7 @@
 ﻿using AmandsSense.Components;
 using AmandsSense.Models;
 using EFT;
+using HarmonyLib;
 using SPT.Reflection.Patching;
 using System.Reflection;
 
@@ -10,7 +11,7 @@ namespace AmandsSense.Patches
     {
         protected override MethodBase GetTargetMethod()
         {
-            return typeof(Player).GetMethod("OnBeenKilledByAggressor", BindingFlags.Instance | BindingFlags.Public);
+            return AccessTools.Method(typeof(Player), nameof(Player.OnBeenKilledByAggressor));
         }
 
         [PatchPostfix]

@@ -12,7 +12,7 @@ namespace AmandsSense.Patches
     {
         protected override MethodBase GetTargetMethod()
         {
-            return typeof(Player).GetMethod("Init", BindingFlags.Instance | BindingFlags.Public);
+            return AccessTools.Method(typeof(Player), nameof(Player.Init));
         }
 
         [PatchPostfix]
@@ -21,7 +21,7 @@ namespace AmandsSense.Patches
             if (__instance != null && __instance.IsYourPlayer)
             {
                 AmandsSenseClass.Player = __instance;
-                AmandsSenseClass.inventoryControllerClass = Traverse.Create(__instance).Field("_inventoryController").GetValue<PlayerInventoryController>();
+                AmandsSenseClass.inventoryControllerClass = __instance.InventoryController as PlayerInventoryController;
                 AmandsSenseClass.Clear();
                 AmandsSenseClass.scene = SceneManager.GetActiveScene().name;
                 AmandsSenseClass.ReloadFiles(true);

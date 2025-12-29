@@ -1,4 +1,5 @@
 ﻿using AmandsSense.Components;
+using HarmonyLib;
 using SPT.Reflection.Patching;
 using System.Reflection;
 
@@ -8,7 +9,7 @@ namespace AmandsSense.Patches
     {
         protected override MethodBase GetTargetMethod()
         {
-            return typeof(PrismEffects).GetMethod("OnEnable", BindingFlags.Instance | BindingFlags.Public);
+            return AccessTools.Method(typeof(PrismEffects), nameof(PrismEffects.OnEnable));
         }
 
         [PatchPostfix]

@@ -35,8 +35,6 @@ namespace AmandsSense.Components
 
         public static float lastDoubleClickTime = 0.0f;
 
-        public static AudioSource SenseAudioSource;
-
         public static Dictionary<string, Sprite> LoadedSprites = new Dictionary<string, Sprite>();
         public static Dictionary<string, AudioClip> LoadedAudioClips = new Dictionary<string, AudioClip>();
 
@@ -60,6 +58,14 @@ namespace AmandsSense.Components
         public static Transform parent;
 
         public static string scene;
+
+        private AudioSource SenseAudioSource { get; set; }
+
+        public void Initialize(AudioSource senseAudioSource)
+        {
+            this.SenseAudioSource = senseAudioSource;
+        }
+
         public void OnGUI()
         {
             /*GUILayout.BeginArea(new Rect(20, 10, 1280, 720));

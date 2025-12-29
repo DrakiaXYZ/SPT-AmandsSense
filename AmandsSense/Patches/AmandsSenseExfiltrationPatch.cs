@@ -1,5 +1,6 @@
 ﻿using AmandsSense.Components;
 using EFT.Interactive;
+using HarmonyLib;
 using SPT.Reflection.Patching;
 using System.Reflection;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace AmandsSense.Patches
     {
         protected override MethodBase GetTargetMethod()
         {
-            return typeof(ExfiltrationPoint).GetMethod("Awake", BindingFlags.Instance | BindingFlags.Public);
+            return AccessTools.Method(typeof(ExfiltrationPoint), nameof(ExfiltrationPoint.Awake));
         }
 
         [PatchPostfix]
