@@ -1,4 +1,7 @@
-
+using AmandsSense.Components;
+using AmandsSense.Enums;
+using AmandsSense.Models;
+using AmandsSense.Utils;
 using BepInEx;
 using BepInEx.Configuration;
 using EFT;
@@ -19,7 +22,7 @@ namespace AmandsSense
         public static string PluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         public static AmandsSenseClass AmandsSenseClassComponent;
-        public static ConfigEntry<EEnableSense> EnableSense { get; set; }
+        public static ConfigEntry<EnableSense> Enabled { get; set; }
         public static ConfigEntry<bool> EnableExfilSense { get; set; }
         public static ConfigEntry<bool> SenseAlwaysOn { get; set; }
 
@@ -158,7 +161,7 @@ namespace AmandsSense
                 // Valid Config File
             }
 
-            EnableSense = Config.Bind("AmandsSense", "EnableSense", EEnableSense.OnText, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 380 }));
+            Enabled = Config.Bind("AmandsSense", "EnableSense", EnableSense.OnText, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 380 }));
             EnableExfilSense = Config.Bind("AmandsSense", "EnableExfilSense", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 370 }));
             SenseAlwaysOn = Config.Bind("AmandsSense", "AlwaysOn", false, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 360 }));
 
@@ -347,7 +350,7 @@ namespace AmandsSense
         [PatchPostfix]
         public static void PatchPostFix(ref Player __instance, Player aggressor, DamageInfoStruct damageInfo, EBodyPart bodyPart, EDamageType lethalDamageType)
         {
-            AmandsSenseClass.DeadPlayers.Add(new SenseDeadPlayerStruct(__instance, aggressor));
+            AmandsSenseClass.DeadPlayers.Add(new SenseDeadPlayer(__instance, aggressor));
         }
     }
     public class AmandsSenseExfiltrationPatch : ModulePatch
