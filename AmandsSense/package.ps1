@@ -21,11 +21,11 @@ $null = mkdir $pluginsDir -ea 0
 $artifactPath = ('{0}\{1}.dll' -f $artifactDir, $modName)
 Copy-Item $artifactPath -Destination $pluginsDir
 $assetPath = ('{0}\Assets\*' -f $artifactDir)
-Copy-Item $assetPath -Destination $pluginsDir -Recurse
+Copy-Item $assetPath -Destination $pluginsDir -Recurse -Force
 
 # This is specific to Sense, VS doesn't want to copy empty dirs so create one
 $soundsDir = ('{0}\sounds\' -f $pluginsDir)
-mkdir $soundsDir
+$null = mkdir $soundsDir -ea 0
 
 # Create the archive
 $archivePath = '{0}\{1}-{2}.7z' -f $packageDir, $modName, $modVersion
