@@ -1,20 +1,19 @@
-using UnityEngine;
-using System;
-using System.Collections.Generic;
-using HarmonyLib;
+using Comfort.Common;
 using EFT;
+using EFT.Interactive;
 using EFT.InventoryLogic;
 using EFT.UI;
-using Comfort.Common;
-using System.IO;
-using System.Threading.Tasks;
-using UnityEngine.Networking;
-using EFT.Interactive;
-using System.Linq;
+using HarmonyLib;
 using SPT.Common.Utils;
-using Sirenix.Utilities;
-using UnityEngine.UI;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.UI;
 using static EFT.Player;
 
 namespace AmandsSense
@@ -70,7 +69,7 @@ namespace AmandsSense
             GUILayout.Label("SenseWorlds " + SenseWorlds.Count().ToString());
             GUILayout.EndArea();*/
         }
-        private void Awake()
+        public void Awake()
         {
             LowLayerMask = LayerMask.GetMask("Terrain", "LowPolyCollider", "HitCollider");
             HighLayerMask = LayerMask.GetMask("Terrain", "HighPolyCollider", "HitCollider");
@@ -81,9 +80,11 @@ namespace AmandsSense
         }
         public void Start()
         {
-            itemsJsonClass = ReadFromJsonFile<ItemsJsonClass>((AppDomain.CurrentDomain.BaseDirectory + "/BepInEx/plugins/Sense/Items.json"));
+            string itemsJsonPath = Path.Combine(AmandsSensePlugin.PluginFolder, "Items.json");
+            itemsJsonClass = ReadFromJsonFile<ItemsJsonClass>(itemsJsonPath);
             ReloadFiles(false);
         }
+
         public void Update()
         {
             if (gameObject != null && Player != null && AmandsSensePlugin.EnableSense.Value != EEnableSense.Off)
@@ -463,16 +464,18 @@ namespace AmandsSense
         }
         public static void ReloadFiles(bool onlySounds)
         {
-            if (onlySounds) goto OnlySounds;
-
-            string[] Files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "/BepInEx/plugins/Sense/images/", "*.png");
-            foreach (string File in Files)
+            if (!onlySounds)
             {
-                LoadSprite(File);
+                string imagesPath = Path.Combine(AmandsSensePlugin.PluginFolder, "images");
+                string[] Files = Directory.GetFiles(imagesPath, "*.png");
+                foreach (string File in Files)
+                {
+                    LoadSprite(File);
+                }
             }
 
-            OnlySounds:
-            string[] AudioFiles = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "/BepInEx/plugins/Sense/sounds/");
+            string soundsPath = Path.Combine(AmandsSensePlugin.PluginFolder, "sounds");
+            string[] AudioFiles = Directory.GetFiles(soundsPath);
             foreach (string File in AudioFiles)
             {
                 LoadAudioClip(File);
@@ -1380,10 +1383,10 @@ namespace AmandsSense
                     {
                         color = AmandsSensePlugin.NonFleaItemsColor.Value;
                     }
-                    /*if (AmandsSenseClass.Player != null && AmandsSenseClass.Player.Profile != null && AmandsSenseClass.Player.Profile.WishList != null && AmandsSenseClass.Player.Profile.WishList.Contains(observedLootItem.Item.TemplateId))
+                    if (AmandsSenseClass.Player != null && AmandsSenseClass.Player.Profile != null && AmandsSenseClass.Player.Profile.WishlistManager != null && AmandsSenseClass.Player.Profile.WishlistManager.IsInWishlist(observedLootItem.Item.TemplateId, true, out var _))
                     {
                         color = AmandsSensePlugin.WishListItemsColor.Value;
-                    }*/
+                    }
                     if (AmandsSenseClass.itemsJsonClass.RareItems != null)
                     {
                         if (AmandsSenseClass.itemsJsonClass.RareItems.Contains(observedLootItem.Item.TemplateId))
@@ -1562,7 +1565,7 @@ namespace AmandsSense
 
                 // SenseContainer Items
                 ESenseItemColor eSenseItemColor = ESenseItemColor.Default;
-                if (lootableContainer.ItemOwner != null && AmandsSenseClass.itemsJsonClass != null && AmandsSenseClass.itemsJsonClass.RareItems != null && AmandsSenseClass.itemsJsonClass.KappaItems != null && AmandsSenseClass.itemsJsonClass.NonFleaExclude != null && AmandsSenseClass.Player.Profile != null)// && AmandsSenseClass.Player.Profile.WishList != null)
+                if (lootableContainer.ItemOwner != null && AmandsSenseClass.itemsJsonClass != null && AmandsSenseClass.itemsJsonClass.RareItems != null && AmandsSenseClass.itemsJsonClass.KappaItems != null && AmandsSenseClass.itemsJsonClass.NonFleaExclude != null && AmandsSenseClass.Player.Profile != null && AmandsSenseClass.Player.Profile.WishlistManager != null)
                 {
                     CompoundItem lootItemClass = lootableContainer.ItemOwner.RootItem as CompoundItem;
                     if (lootItemClass != null)
@@ -1582,10 +1585,10 @@ namespace AmandsSense
                                         {
                                             eSenseItemColor = ESenseItemColor.Rare;
                                         }
-                                        /*else if (AmandsSenseClass.Player.Profile.WishList.Contains(item.TemplateId) && eSenseItemColor != ESenseItemColor.Rare)
+                                        else if (AmandsSenseClass.Player.Profile.WishlistManager.IsInWishlist(item.TemplateId, true, out var _) && eSenseItemColor != ESenseItemColor.Rare)
                                         {
                                             eSenseItemColor = ESenseItemColor.WishList;
-                                        }*/
+                                        }
                                         else if (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId) && eSenseItemColor != ESenseItemColor.Rare && eSenseItemColor != ESenseItemColor.WishList)
                                         {
                                             if (!AmandsSensePlugin.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
@@ -1729,7 +1732,7 @@ namespace AmandsSense
 
                 // SenseContainer Items
                 ESenseItemColor eSenseItemColor = ESenseItemColor.Default;
-                if (lootableContainer.ItemOwner != null && AmandsSenseClass.itemsJsonClass != null && AmandsSenseClass.itemsJsonClass.RareItems != null && AmandsSenseClass.itemsJsonClass.KappaItems != null && AmandsSenseClass.itemsJsonClass.NonFleaExclude != null && AmandsSenseClass.Player.Profile != null)// && AmandsSenseClass.Player.Profile.WishList != null)
+                if (lootableContainer.ItemOwner != null && AmandsSenseClass.itemsJsonClass != null && AmandsSenseClass.itemsJsonClass.RareItems != null && AmandsSenseClass.itemsJsonClass.KappaItems != null && AmandsSenseClass.itemsJsonClass.NonFleaExclude != null && AmandsSenseClass.Player.Profile != null && AmandsSenseClass.Player.Profile.WishlistManager != null)
                 {
                     CompoundItem lootItemClass = lootableContainer.ItemOwner.RootItem as CompoundItem;
                     if (lootItemClass != null)
@@ -1749,10 +1752,10 @@ namespace AmandsSense
                                         {
                                             eSenseItemColor = ESenseItemColor.Rare;
                                         }
-                                        /*else if (AmandsSenseClass.Player.Profile.WishList.Contains(item.TemplateId) && eSenseItemColor != ESenseItemColor.Rare)
+                                        else if (AmandsSenseClass.Player.Profile.WishlistManager.IsInWishlist(item.TemplateId, true, out var _) && eSenseItemColor != ESenseItemColor.Rare)
                                         {
                                             eSenseItemColor = ESenseItemColor.WishList;
-                                        }*/
+                                        }
                                         else if (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId) && eSenseItemColor != ESenseItemColor.Rare && eSenseItemColor != ESenseItemColor.WishList)
                                         {
                                             if (!AmandsSensePlugin.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
@@ -1909,7 +1912,7 @@ namespace AmandsSense
                 emptyDeadPlayer = false;
                 ESenseItemColor eSenseItemColor = ESenseItemColor.Default;
 
-                if (AmandsSenseClass.itemsJsonClass != null && AmandsSenseClass.itemsJsonClass.RareItems != null && AmandsSenseClass.itemsJsonClass.KappaItems != null && AmandsSenseClass.itemsJsonClass.NonFleaExclude != null && AmandsSenseClass.Player != null && AmandsSenseClass.Player.Profile != null)// && AmandsSenseClass.Player.Profile.WishList != null)
+                if (AmandsSenseClass.itemsJsonClass != null && AmandsSenseClass.itemsJsonClass.RareItems != null && AmandsSenseClass.itemsJsonClass.KappaItems != null && AmandsSenseClass.itemsJsonClass.NonFleaExclude != null && AmandsSenseClass.Player != null && AmandsSenseClass.Player.Profile != null && AmandsSenseClass.Player.Profile.WishlistManager != null)
                 {
                     if (DeadPlayer.Profile != null)
                     {
@@ -1936,7 +1939,7 @@ namespace AmandsSense
                             {
                                 foreach (Item item in AllRealPlayerItems)
                                 {
-                                    if (item.Parent != null)
+                                    if (item.CurrentAddress != null)
                                     {
                                         if (item.Parent.Container != null && item.Parent.Container.ParentItem != null && TemplateIdToObjectMappingsClass.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(item.Parent.Container.ParentItem.GetType()))
                                         {
@@ -1971,10 +1974,10 @@ namespace AmandsSense
                                     {
                                         eSenseItemColor = ESenseItemColor.Rare;
                                     }
-                                    /*else if (AmandsSenseClass.Player.Profile.WishList.Contains(item.TemplateId) && eSenseItemColor != ESenseItemColor.Rare)
+                                    else if (AmandsSenseClass.Player.Profile.WishlistManager.IsInWishlist(item.TemplateId, true, out var _) && eSenseItemColor != ESenseItemColor.Rare)
                                     {
                                         eSenseItemColor = ESenseItemColor.WishList;
-                                    }*/
+                                    }
                                     else if (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId) && eSenseItemColor != ESenseItemColor.Rare && eSenseItemColor != ESenseItemColor.WishList)
                                     {
                                         if (!AmandsSensePlugin.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
@@ -2097,7 +2100,7 @@ namespace AmandsSense
                 emptyDeadPlayer = false;
                 ESenseItemColor eSenseItemColor = ESenseItemColor.Default;
 
-                if (AmandsSenseClass.itemsJsonClass != null && AmandsSenseClass.itemsJsonClass.RareItems != null && AmandsSenseClass.itemsJsonClass.KappaItems != null && AmandsSenseClass.itemsJsonClass.NonFleaExclude != null && AmandsSenseClass.Player != null && AmandsSenseClass.Player.Profile != null)// && AmandsSenseClass.Player.Profile.WishList != null)
+                if (AmandsSenseClass.itemsJsonClass != null && AmandsSenseClass.itemsJsonClass.RareItems != null && AmandsSenseClass.itemsJsonClass.KappaItems != null && AmandsSenseClass.itemsJsonClass.NonFleaExclude != null && AmandsSenseClass.Player != null && AmandsSenseClass.Player.Profile != null && AmandsSenseClass.Player.Profile.WishlistManager != null)
                 {
                     if (DeadPlayer != null && DeadPlayer.Profile != null)
                     {
@@ -2109,7 +2112,7 @@ namespace AmandsSense
                             {
                                 foreach (Item item in AllRealPlayerItems)
                                 {
-                                    if (item.Parent != null)
+                                    if (item.CurrentAddress != null)
                                     {
                                         if (item.Parent.Container != null && item.Parent.Container.ParentItem != null && TemplateIdToObjectMappingsClass.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(item.Parent.Container.ParentItem.GetType()))
                                         {
@@ -2144,10 +2147,10 @@ namespace AmandsSense
                                     {
                                         eSenseItemColor = ESenseItemColor.Rare;
                                     }
-                                    /*else if (AmandsSenseClass.Player.Profile.WishList.Contains(item.TemplateId) && eSenseItemColor != ESenseItemColor.Rare)
+                                    else if (AmandsSenseClass.Player.Profile.WishlistManager.IsInWishlist(item.TemplateId, true, out var _) && eSenseItemColor != ESenseItemColor.Rare)
                                     {
                                         eSenseItemColor = ESenseItemColor.WishList;
-                                    }*/
+                                    }
                                     else if (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId) && eSenseItemColor != ESenseItemColor.Rare && eSenseItemColor != ESenseItemColor.WishList)
                                     {
                                         if (!AmandsSensePlugin.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))

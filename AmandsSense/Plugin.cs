@@ -1,24 +1,23 @@
 
-using SPT.Reflection.Patching;
 using BepInEx;
 using BepInEx.Configuration;
+using EFT;
+using EFT.Interactive;
+using HarmonyLib;
+using SPT.Reflection.Patching;
+using System.IO;
 using System.Reflection;
 using UnityEngine;
-using HarmonyLib;
-using EFT;
-using System.Threading.Tasks;
-using EFT.Interactive;
-using EFT.HealthSystem;
-using EFT.UI;
 using UnityEngine.SceneManagement;
 using static EFT.Player;
 
 namespace AmandsSense
 {
-    [BepInPlugin("com.Amanda.Sense", "Sense", "2.0.0")]
+    [BepInPlugin("com.Amanda.Sense", "Sense", "3.0.0")]
     public class AmandsSensePlugin : BaseUnityPlugin
     {
-        public static GameObject Hook;
+        public static string PluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
         public static AmandsSenseClass AmandsSenseClassComponent;
         public static ConfigEntry<EEnableSense> EnableSense { get; set; }
         public static ConfigEntry<bool> EnableExfilSense { get; set; }
@@ -133,15 +132,12 @@ namespace AmandsSense
         public static ConfigEntry<string> Version { get; set; }
         private static bool RequestDefaultValues = false;
 
-        private void Awake()
+        public void Awake()
         {
             Debug.LogError("Sense Awake()");
-            Hook = new GameObject("AmandsSense");
-            AmandsSenseClassComponent = Hook.AddComponent<AmandsSenseClass>();
-            AmandsSenseClass.SenseAudioSource = Hook.AddComponent<AudioSource>();
-            DontDestroyOnLoad(Hook);
         }
-        private void Start()
+
+        public void Start()
         {
             Version = Config.Bind("Versioning", "Version", "0.0.0", new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 1, ReadOnly = true, IsAdvanced = true }));
 
@@ -284,6 +280,7 @@ namespace AmandsSense
 
             if (RequestDefaultValues) DefaultValues();
 
+            new GameStartedPatch().Enable();
             new AmandsPlayerPatch().Enable();
             new AmandsKillPatch().Enable();
             new AmandsSenseExfiltrationPatch().Enable();
@@ -308,7 +305,7 @@ namespace AmandsSense
             return typeof(Player).GetMethod("Init", BindingFlags.Instance | BindingFlags.Public);
         }
         [PatchPostfix]
-        private static void PatchPostFix(ref Player __instance)
+        public static void PatchPostFix(ref Player __instance)
         {
             if (__instance != null && __instance.IsYourPlayer)
             {
@@ -327,7 +324,7 @@ namespace AmandsSense
             return typeof(PrismEffects).GetMethod("OnEnable", BindingFlags.Instance | BindingFlags.Public);
         }
         [PatchPostfix]
-        private static void PatchPostFix(ref PrismEffects __instance)
+        public static void PatchPostFix(ref PrismEffects __instance)
         {
             if (__instance.gameObject.name == "FPS Camera")
             {
@@ -348,7 +345,7 @@ namespace AmandsSense
             return typeof(Player).GetMethod("OnBeenKilledByAggressor", BindingFlags.Instance | BindingFlags.Public);
         }
         [PatchPostfix]
-        private static void PatchPostFix(ref Player __instance, Player aggressor, DamageInfoStruct damageInfo, EBodyPart bodyPart, EDamageType lethalDamageType)
+        public static void PatchPostFix(ref Player __instance, Player aggressor, DamageInfoStruct damageInfo, EBodyPart bodyPart, EDamageType lethalDamageType)
         {
             AmandsSenseClass.DeadPlayers.Add(new SenseDeadPlayerStruct(__instance, aggressor));
         }
@@ -360,7 +357,7 @@ namespace AmandsSense
             return typeof(ExfiltrationPoint).GetMethod("Awake", BindingFlags.Instance | BindingFlags.Public);
         }
         [PatchPostfix]
-        private static void PatchPostFix(ref ExfiltrationPoint __instance)
+        public static void PatchPostFix(ref ExfiltrationPoint __instance)
         {
             GameObject amandsSenseExfiltrationGameObject = new GameObject("SenseExfil");
             AmandsSenseExfil amandsSenseExfil = amandsSenseExfiltrationGameObject.AddComponent<AmandsSenseExfil>();
@@ -368,6 +365,21 @@ namespace AmandsSense
             amandsSenseExfil.Construct();
             amandsSenseExfil.ShowSense();
             AmandsSenseClass.SenseExfils.Add(amandsSenseExfil);
+        }
+    }
+
+    public class GameStartedPatch : ModulePatch
+    {
+        protected override MethodBase GetTargetMethod()
+        {
+            return typeof(GameWorld).GetMethod(nameof(GameWorld.OnGameStarted));
+        }
+
+        [PatchPostfix]
+        public static void PatchPostfix(GameWorld __instance)
+        {
+            AmandsSensePlugin.AmandsSenseClassComponent = __instance.gameObject.AddComponent<AmandsSenseClass>();
+            AmandsSenseClass.SenseAudioSource = __instance.gameObject.AddComponent<AudioSource>();
         }
     }
 }
