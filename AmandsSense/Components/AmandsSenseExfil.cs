@@ -1,4 +1,4 @@
-﻿using AmandsSense.Utils;
+﻿using AmandsSense.Helpers;
 using EFT;
 using EFT.Interactive;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace AmandsSense.Components
         public ExfiltrationPoint exfiltrationPoint;
 
         public Color color = Color.green;
-        public Color textColor = AmandsSensePlugin.TextColor.Value;
+        public Color textColor = Settings.TextColor.Value;
 
         public SpriteRenderer spriteRenderer;
         public Sprite sprite;
@@ -37,7 +37,7 @@ namespace AmandsSense.Components
         public void SetSense(ExfiltrationPoint ExfiltrationPoint)
         {
             exfiltrationPoint = ExfiltrationPoint;
-            gameObject.transform.position = exfiltrationPoint.transform.position + (Vector3.up * AmandsSensePlugin.ExfilVerticalOffset.Value);
+            gameObject.transform.position = exfiltrationPoint.transform.position + (Vector3.up * Settings.ExfilVerticalOffset.Value);
             gameObject.transform.localScale = new Vector3(-50, 50, 50);
         }
 
@@ -59,7 +59,7 @@ namespace AmandsSense.Components
             light.color = new Color(color.r, color.g, color.b, 1f);
             light.shadows = LightShadows.None;
             light.intensity = 0f;
-            light.range = AmandsSensePlugin.ExfilLightRange.Value;
+            light.range = Settings.ExfilLightRange.Value;
 
             // AmandsSenseExfil Text
             textGameObject = new GameObject("Text");
@@ -119,13 +119,13 @@ namespace AmandsSense.Components
         public void ShowSense()
         {
             color = Color.green;
-            textColor = AmandsSensePlugin.TextColor.Value;
+            textColor = Settings.TextColor.Value;
 
             if (exfiltrationPoint != null && exfiltrationPoint.gameObject.activeSelf && AmandsSenseClass.Player != null && exfiltrationPoint.InfiltrationMatch(AmandsSenseClass.Player))
             {
                 sprite = AmandsSenseClass.LoadedSprites["Exfil.png"];
                 bool Unmet = exfiltrationPoint.UnmetRequirements(AmandsSenseClass.Player).ToArray().Any();
-                color = Unmet ? AmandsSensePlugin.ExfilUnmetColor.Value : AmandsSensePlugin.ExfilColor.Value;
+                color = Unmet ? Settings.ExfilUnmetColor.Value : Settings.ExfilColor.Value;
                 // AmandsSenseExfil Sprite
                 if (spriteRenderer != null)
                 {
@@ -138,7 +138,7 @@ namespace AmandsSense.Components
                 {
                     light.color = new Color(color.r, color.g, color.b, 1f);
                     light.intensity = 0f;
-                    light.range = AmandsSensePlugin.ExfilLightRange.Value;
+                    light.range = Settings.ExfilLightRange.Value;
                 }
 
                 // AmandsSenseExfil Type
@@ -202,7 +202,7 @@ namespace AmandsSense.Components
             {
                 sprite = AmandsSenseClass.LoadedSprites["Exfil.png"];
                 bool Unmet = exfiltrationPoint.UnmetRequirements(AmandsSenseClass.Player).ToArray().Any();
-                color = Unmet ? AmandsSensePlugin.ExfilUnmetColor.Value : AmandsSensePlugin.ExfilColor.Value;
+                color = Unmet ? Settings.ExfilUnmetColor.Value : Settings.ExfilColor.Value;
                 // AmandsSenseExfil Sprite
                 if (spriteRenderer != null)
                 {
@@ -214,7 +214,7 @@ namespace AmandsSense.Components
                 if (light != null)
                 {
                     light.color = new Color(color.r, color.g, color.b, 1f);
-                    light.range = AmandsSensePlugin.ExfilLightRange.Value;
+                    light.range = Settings.ExfilLightRange.Value;
                 }
 
                 // AmandsSenseExfil Type
@@ -270,7 +270,7 @@ namespace AmandsSense.Components
             {
                 if (Starting)
                 {
-                    Intensity += AmandsSensePlugin.IntensitySpeed.Value * Time.deltaTime;
+                    Intensity += Settings.IntensitySpeed.Value * Time.deltaTime;
                     if (Intensity >= 1f)
                     {
                         UpdateIntensity = false;
@@ -279,7 +279,7 @@ namespace AmandsSense.Components
                 }
                 else
                 {
-                    Intensity -= AmandsSensePlugin.IntensitySpeed.Value * Time.deltaTime;
+                    Intensity -= Settings.IntensitySpeed.Value * Time.deltaTime;
                     if (Intensity <= 0f)
                     {
                         Starting = true;
@@ -296,7 +296,7 @@ namespace AmandsSense.Components
                 }
                 if (light != null)
                 {
-                    light.intensity = Intensity * AmandsSensePlugin.ExfilLightIntensity.Value;
+                    light.intensity = Intensity * Settings.ExfilLightIntensity.Value;
                 }
                 if (typeText != null)
                 {
@@ -318,7 +318,7 @@ namespace AmandsSense.Components
             else if (!Starting)
             {
                 LifeSpan += Time.deltaTime;
-                if (LifeSpan > AmandsSensePlugin.ExfilDuration.Value)
+                if (LifeSpan > Settings.ExfilDuration.Value)
                 {
                     UpdateIntensity = true;
                 }

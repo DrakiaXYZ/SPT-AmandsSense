@@ -1,4 +1,5 @@
 ﻿using AmandsSense.Enums;
+using AmandsSense.Helpers;
 using EFT;
 using EFT.Interactive;
 using System.Threading.Tasks;
@@ -66,7 +67,7 @@ namespace AmandsSense.Components
 
                 amandsSenseConstructorGameObject = new GameObject("Constructor");
                 amandsSenseConstructorGameObject.transform.SetParent(gameObject.transform, false);
-                amandsSenseConstructorGameObject.transform.localScale = Vector3.one * AmandsSensePlugin.Size.Value;
+                amandsSenseConstructorGameObject.transform.localScale = Vector3.one * Settings.Size.Value;
 
                 if (Lazy)
                 {
@@ -131,7 +132,7 @@ namespace AmandsSense.Components
                 {
                     case SenseWorldType.Item:
                     case SenseWorldType.Container:
-                        gameObject.transform.position = new Vector3(OwnerCollider.bounds.center.x, OwnerCollider.ClosestPoint(OwnerCollider.bounds.center + (Vector3.up * 10f)).y + AmandsSensePlugin.VerticalOffset.Value, OwnerCollider.bounds.center.z);
+                        gameObject.transform.position = new Vector3(OwnerCollider.bounds.center.x, OwnerCollider.ClosestPoint(OwnerCollider.bounds.center + (Vector3.up * 10f)).y + Settings.VerticalOffset.Value, OwnerCollider.bounds.center.z);
                         break;
                     case SenseWorldType.Drawer:
                         if (OwnerCollider != null)
@@ -170,7 +171,7 @@ namespace AmandsSense.Components
                 switch (SenseWorldType)
                 {
                     case SenseWorldType.Item:
-                        gameObject.transform.position = new Vector3(OwnerCollider.bounds.center.x, OwnerCollider.ClosestPoint(OwnerCollider.bounds.center + (Vector3.up * 10f)).y + AmandsSensePlugin.VerticalOffset.Value, OwnerCollider.bounds.center.z);
+                        gameObject.transform.position = new Vector3(OwnerCollider.bounds.center.x, OwnerCollider.ClosestPoint(OwnerCollider.bounds.center + (Vector3.up * 10f)).y + Settings.VerticalOffset.Value, OwnerCollider.bounds.center.z);
                         break;
                     case SenseWorldType.Container:
                         break;
@@ -189,7 +190,7 @@ namespace AmandsSense.Components
             if (Waiting || UpdateIntensity) return;
 
             LifeSpan = 0f;
-            Delay = Vector3.Distance(AmandsSenseClass.Player.Position, gameObject.transform.position) / AmandsSensePlugin.Speed.Value;
+            Delay = Vector3.Distance(AmandsSenseClass.Player.Position, gameObject.transform.position) / Settings.Speed.Value;
             WaitAndStart();
         }
         public bool HeightCheck()
@@ -200,7 +201,7 @@ namespace AmandsSense.Components
                 case SenseWorldType.Container:
                 case SenseWorldType.Drawer:
                 case SenseWorldType.Deadbody:
-                    return AmandsSenseClass.Player != null && (transform.position.y < AmandsSenseClass.Player.Position.y + AmandsSensePlugin.MinHeight.Value || transform.position.y > AmandsSenseClass.Player.Position.y + AmandsSensePlugin.MaxHeight.Value);
+                    return AmandsSenseClass.Player != null && (transform.position.y < AmandsSenseClass.Player.Position.y + Settings.MinHeight.Value || transform.position.y > AmandsSenseClass.Player.Position.y + Settings.MaxHeight.Value);
             }
             return false;
         }
@@ -221,7 +222,7 @@ namespace AmandsSense.Components
             {
                 if (Starting)
                 {
-                    Intensity += AmandsSensePlugin.IntensitySpeed.Value * Time.deltaTime;
+                    Intensity += Settings.IntensitySpeed.Value * Time.deltaTime;
                     if (Intensity >= 1f)
                     {
                         UpdateIntensity = false;
@@ -230,7 +231,7 @@ namespace AmandsSense.Components
                 }
                 else
                 {
-                    Intensity -= AmandsSensePlugin.IntensitySpeed.Value * Time.deltaTime;
+                    Intensity -= Settings.IntensitySpeed.Value * Time.deltaTime;
                     if (Intensity <= 0f)
                     {
                         if (Waiting)
@@ -251,7 +252,7 @@ namespace AmandsSense.Components
             else if (!Starting && !Waiting)
             {
                 LifeSpan += Time.deltaTime;
-                if (LifeSpan > AmandsSensePlugin.Duration.Value)
+                if (LifeSpan > Settings.Duration.Value)
                 {
                     UpdateIntensity = true;
                 }
@@ -264,7 +265,7 @@ namespace AmandsSense.Components
                     case SenseWorldType.Container:
                     case SenseWorldType.Deadbody:
                         transform.rotation = Camera.main.transform.rotation;
-                        transform.localScale = Vector3.one * Mathf.Min(AmandsSensePlugin.SizeClamp.Value, Vector3.Distance(Camera.main.transform.position, transform.position));
+                        transform.localScale = Vector3.one * Mathf.Min(Settings.SizeClamp.Value, Vector3.Distance(Camera.main.transform.position, transform.position));
                         break;
                     case SenseWorldType.Drawer:
                         break;

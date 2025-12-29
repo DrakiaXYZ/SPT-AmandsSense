@@ -1,4 +1,5 @@
 using AmandsSense.Enums;
+using AmandsSense.Helpers;
 using AmandsSense.Models;
 using EFT;
 using EFT.InventoryLogic;
@@ -83,11 +84,11 @@ namespace AmandsSense.Components
 
         public void Update()
         {
-            if (gameObject != null && Player != null && AmandsSensePlugin.Enabled.Value != EnableSense.Off)
+            if (gameObject != null && Player != null && Settings.Enabled.Value != EnableSense.Off)
             {
                 if (CurrentOverlapLocation <= 8)
                 {
-                    int CurrentOverlapCountTest = Physics.OverlapBoxNonAlloc(Player.Position + SenseOverlapLocations[CurrentOverlapLocation] * (AmandsSensePlugin.Radius.Value * 2f / 3f), Vector3.one * (AmandsSensePlugin.Radius.Value * 2f / 3f), CurrentOverlapLoctionColliders, Quaternion.Euler(0f, 0f, 0f), BoxInteractiveLayerMask, QueryTriggerInteraction.Collide);
+                    int CurrentOverlapCountTest = Physics.OverlapBoxNonAlloc(Player.Position + SenseOverlapLocations[CurrentOverlapLocation] * (Settings.Radius.Value * 2f / 3f), Vector3.one * (Settings.Radius.Value * 2f / 3f), CurrentOverlapLoctionColliders, Quaternion.Euler(0f, 0f, 0f), BoxInteractiveLayerMask, QueryTriggerInteraction.Collide);
                     for (int i = 0; i < CurrentOverlapCountTest; i++)
                     {
                         if (!SenseWorlds.ContainsKey(CurrentOverlapLoctionColliders[i].GetInstanceID()))
@@ -97,7 +98,7 @@ namespace AmandsSense.Components
                             amandsSenseWorld.OwnerCollider = CurrentOverlapLoctionColliders[i];
                             amandsSenseWorld.OwnerGameObject = amandsSenseWorld.OwnerCollider.gameObject;
                             amandsSenseWorld.Id = amandsSenseWorld.OwnerCollider.GetInstanceID();
-                            amandsSenseWorld.Delay = Vector3.Distance(Player.Position, amandsSenseWorld.OwnerCollider.transform.position) / AmandsSensePlugin.Speed.Value;
+                            amandsSenseWorld.Delay = Vector3.Distance(Player.Position, amandsSenseWorld.OwnerCollider.transform.position) / Settings.Speed.Value;
                             SenseWorlds.Add(amandsSenseWorld.Id, amandsSenseWorld);
                         }
                         else
@@ -107,27 +108,27 @@ namespace AmandsSense.Components
                     }
                     CurrentOverlapLocation++;
                 }
-                else if (AmandsSensePlugin.SenseAlwaysOn.Value)
+                else if (Settings.SenseAlwaysOn.Value)
                 {
                     AlwaysOnTime += Time.deltaTime;
-                    if (AlwaysOnTime > AmandsSensePlugin.AlwaysOnFrequency.Value)
+                    if (AlwaysOnTime > Settings.AlwaysOnFrequency.Value)
                     {
                         AlwaysOnTime = 0f;
                         CurrentOverlapLocation = 0;
                         SenseDeadBodies();
                     }
                 }
-                if (CooldownTime < AmandsSensePlugin.Cooldown.Value)
+                if (CooldownTime < Settings.Cooldown.Value)
                 {
                     CooldownTime += Time.deltaTime;
                 }
-                if (Input.GetKeyDown(AmandsSensePlugin.SenseKey.Value.MainKey))
+                if (Input.GetKeyDown(Settings.SenseKey.Value.MainKey))
                 {
-                    if (AmandsSensePlugin.DoubleClick.Value)
+                    if (Settings.DoubleClick.Value)
                     {
                         float timeSinceLastClick = Time.time - lastDoubleClickTime;
                         lastDoubleClickTime = Time.time;
-                        if (timeSinceLastClick <= 0.5f && CooldownTime >= AmandsSensePlugin.Cooldown.Value)
+                        if (timeSinceLastClick <= 0.5f && CooldownTime >= Settings.Cooldown.Value)
                         {
                             CooldownTime = 0f;
                             CurrentOverlapLocation = 0;
@@ -136,17 +137,17 @@ namespace AmandsSense.Components
                             if (prismEffects != null)
                             {
                                 Radius = 0;
-                                prismEffects.useDof = AmandsSensePlugin.useDof.Value;
+                                prismEffects.useDof = Settings.useDof.Value;
                             }
                             if (LoadedAudioClips.ContainsKey("Sense.wav"))
                             {
-                                SenseAudioSource.PlayOneShot(LoadedAudioClips["Sense.wav"], AmandsSensePlugin.ActivateSenseVolume.Value);
+                                SenseAudioSource.PlayOneShot(LoadedAudioClips["Sense.wav"], Settings.ActivateSenseVolume.Value);
                             }
                         }
                     }
                     else
                     {
-                        if (CooldownTime >= AmandsSensePlugin.Cooldown.Value)
+                        if (CooldownTime >= Settings.Cooldown.Value)
                         {
                             CooldownTime = 0f;
                             CurrentOverlapLocation = 0;
@@ -155,18 +156,18 @@ namespace AmandsSense.Components
                             if (prismEffects != null)
                             {
                                 Radius = 0;
-                                prismEffects.useDof = AmandsSensePlugin.useDof.Value;
+                                prismEffects.useDof = Settings.useDof.Value;
                             }
                             if (LoadedAudioClips.ContainsKey("Sense.wav"))
                             {
-                                SenseAudioSource.PlayOneShot(LoadedAudioClips["Sense.wav"], AmandsSensePlugin.ActivateSenseVolume.Value);
+                                SenseAudioSource.PlayOneShot(LoadedAudioClips["Sense.wav"], Settings.ActivateSenseVolume.Value);
                             }
                         }
                     }
                 }
-                if (Radius < Mathf.Max(AmandsSensePlugin.Radius.Value, AmandsSensePlugin.DeadPlayerRadius.Value))
+                if (Radius < Mathf.Max(Settings.Radius.Value, Settings.DeadPlayerRadius.Value))
                 {
-                    Radius += AmandsSensePlugin.Speed.Value * Time.deltaTime;
+                    Radius += Settings.Speed.Value * Time.deltaTime;
                     if (prismEffects != null)
                     {
                         prismEffects.dofFocusPoint = Radius - prismEffects.dofFocusDistance;
@@ -190,7 +191,7 @@ namespace AmandsSense.Components
         {
             foreach (SenseDeadPlayer deadPlayer in DeadPlayers)
             {
-                if (Vector3.Distance(Player.Position, deadPlayer.victim.Position) < AmandsSensePlugin.DeadPlayerRadius.Value)
+                if (Vector3.Distance(Player.Position, deadPlayer.victim.Position) < Settings.DeadPlayerRadius.Value)
                 {
                     if (!SenseWorlds.ContainsKey(deadPlayer.victim.GetInstanceID()))
                     {
@@ -198,7 +199,7 @@ namespace AmandsSense.Components
                         AmandsSenseWorld amandsSenseWorld = SenseWorldGameObject.AddComponent<AmandsSenseWorld>();
                         amandsSenseWorld.OwnerGameObject = deadPlayer.victim.gameObject;
                         amandsSenseWorld.Id = deadPlayer.victim.GetInstanceID();
-                        amandsSenseWorld.Delay = Vector3.Distance(Player.Position, deadPlayer.victim.Position) / AmandsSensePlugin.Speed.Value;
+                        amandsSenseWorld.Delay = Vector3.Distance(Player.Position, deadPlayer.victim.Position) / Settings.Speed.Value;
                         amandsSenseWorld.Lazy = false;
                         amandsSenseWorld.SenseWorldType = SenseWorldType.Deadbody;
                         amandsSenseWorld.SenseDeadPlayer = deadPlayer.victim as LocalPlayer;
@@ -213,7 +214,7 @@ namespace AmandsSense.Components
         }
         public void ShowSenseExfils()
         {
-            if (!AmandsSensePlugin.EnableExfilSense.Value) return;
+            if (!Settings.EnableExfilSense.Value) return;
 
             if (scene == "Factory_Day" || scene == "Factory_Night" || scene == "Laboratory_Scripts") return;
 
@@ -237,7 +238,7 @@ namespace AmandsSense.Components
                     senseExfil.ShowSense();
                 }
             }
-            if (AmandsSensePlugin.ExfilLightShadows.Value && ClosestAmandsSenseExfil != null && ClosestAmandsSenseExfil.light != null) ClosestAmandsSenseExfil.light.shadows = LightShadows.Hard;
+            if (Settings.ExfilLightShadows.Value && ClosestAmandsSenseExfil != null && ClosestAmandsSenseExfil.light != null) ClosestAmandsSenseExfil.light.shadows = LightShadows.Hard;
         }
         public static void Clear()
         {

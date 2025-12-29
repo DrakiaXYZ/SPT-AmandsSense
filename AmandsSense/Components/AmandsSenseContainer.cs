@@ -1,5 +1,5 @@
 ﻿using AmandsSense.Enums;
-using AmandsSense.Utils;
+using AmandsSense.Helpers;
 using Comfort.Common;
 using EFT;
 using EFT.Interactive;
@@ -58,11 +58,11 @@ namespace AmandsSense.Components
                                         }
                                         else if (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId) && senseItemColor != SenseItemColor.Rare && senseItemColor != SenseItemColor.WishList)
                                         {
-                                            if (!AmandsSensePlugin.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
+                                            if (!Settings.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
                                             {
                                                 continue;
                                             }
-                                            else if (AmandsSensePlugin.EnableFlea.Value)
+                                            else if (Settings.EnableFlea.Value)
                                             {
                                                 senseItemColor = SenseItemColor.NonFlea;
                                             }
@@ -91,27 +91,27 @@ namespace AmandsSense.Components
                 switch (senseItemColor)
                 {
                     case SenseItemColor.Default:
-                        color = AmandsSensePlugin.ObservedLootItemColor.Value;
+                        color = Settings.ObservedLootItemColor.Value;
                         break;
                     case SenseItemColor.Kappa:
-                        color = AmandsSensePlugin.KappaItemsColor.Value;
+                        color = Settings.KappaItemsColor.Value;
                         break;
                     case SenseItemColor.NonFlea:
-                        color = AmandsSensePlugin.NonFleaItemsColor.Value;
+                        color = Settings.NonFleaItemsColor.Value;
                         if (AmandsSenseClass.LoadedSprites.ContainsKey("icon_barter.png"))
                         {
                             sprite = AmandsSenseClass.LoadedSprites["icon_barter.png"];
                         }
                         break;
                     case SenseItemColor.WishList:
-                        color = AmandsSensePlugin.WishListItemsColor.Value;
+                        color = Settings.WishListItemsColor.Value;
                         if (AmandsSenseClass.LoadedSprites.ContainsKey("icon_fav_checked.png"))
                         {
                             sprite = AmandsSenseClass.LoadedSprites["icon_fav_checked.png"];
                         }
                         break;
                     case SenseItemColor.Rare:
-                        color = AmandsSensePlugin.RareItemsColor.Value;
+                        color = Settings.RareItemsColor.Value;
                         break;
                 }
 
@@ -127,7 +127,7 @@ namespace AmandsSense.Components
                 {
                     light.color = new Color(color.r, color.g, color.b, 1f);
                     light.intensity = 0f;
-                    light.range = AmandsSensePlugin.LightRange.Value;
+                    light.range = Settings.LightRange.Value;
                 }
 
                 // SenseContainer Type
@@ -151,7 +151,7 @@ namespace AmandsSense.Components
                 if (descriptionText != null)
                 {
                     descriptionText.fontSize = 0.75f;
-                    if (AmandsSensePlugin.ContainerLootcount.Value)
+                    if (Settings.ContainerLootcount.Value)
                     {
                         descriptionText.text = AmandsSenseHelper.Localized("loot", EStringCase.None) + " " + itemCount;
                     }
@@ -163,21 +163,21 @@ namespace AmandsSense.Components
                 }
 
                 // SenseContainer Sound
-                if (AmandsSensePlugin.SenseRareSound.Value && AmandsSenseClass.LoadedAudioClips.ContainsKey("SenseRare.wav"))
+                if (Settings.SenseRareSound.Value && AmandsSenseClass.LoadedAudioClips.ContainsKey("SenseRare.wav"))
                 {
-                    if (!AmandsSensePlugin.SenseAlwaysOn.Value)
+                    if (!Settings.SenseAlwaysOn.Value)
                     {
-                        Singleton<BetterAudio>.Instance.PlayAtPoint(transform.position, AmandsSenseClass.LoadedAudioClips["SenseRare.wav"], AmandsSensePlugin.AudioDistance.Value, BetterAudio.AudioSourceGroupType.Environment, AmandsSensePlugin.AudioRolloff.Value, AmandsSensePlugin.ContainerAudioVolume.Value, EOcclusionTest.Fast);
+                        Singleton<BetterAudio>.Instance.PlayAtPoint(transform.position, AmandsSenseClass.LoadedAudioClips["SenseRare.wav"], Settings.AudioDistance.Value, BetterAudio.AudioSourceGroupType.Environment, Settings.AudioRolloff.Value, Settings.ContainerAudioVolume.Value, EOcclusionTest.Fast);
                     }
                 }
                 else
                 {
-                    if (!AmandsSensePlugin.SenseAlwaysOn.Value && !Drawer && lootableContainer.OpenSound.Length > 0)
+                    if (!Settings.SenseAlwaysOn.Value && !Drawer && lootableContainer.OpenSound.Length > 0)
                     {
                         AudioClip OpenSound = lootableContainer.OpenSound[0];
                         if (OpenSound != null)
                         {
-                            Singleton<BetterAudio>.Instance.PlayAtPoint(transform.position, OpenSound, AmandsSensePlugin.AudioDistance.Value, BetterAudio.AudioSourceGroupType.Environment, AmandsSensePlugin.AudioRolloff.Value, AmandsSensePlugin.ContainerAudioVolume.Value, EOcclusionTest.Fast);
+                            Singleton<BetterAudio>.Instance.PlayAtPoint(transform.position, OpenSound, Settings.AudioDistance.Value, BetterAudio.AudioSourceGroupType.Environment, Settings.AudioRolloff.Value, Settings.ContainerAudioVolume.Value, EOcclusionTest.Fast);
                         }
                     }
                 }
@@ -225,11 +225,11 @@ namespace AmandsSense.Components
                                         }
                                         else if (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId) && senseItemColor != SenseItemColor.Rare && senseItemColor != SenseItemColor.WishList)
                                         {
-                                            if (!AmandsSensePlugin.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
+                                            if (!Settings.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
                                             {
                                                 continue;
                                             }
-                                            else if (AmandsSensePlugin.EnableFlea.Value)
+                                            else if (Settings.EnableFlea.Value)
                                             {
                                                 senseItemColor = SenseItemColor.NonFlea;
                                             }
@@ -258,27 +258,27 @@ namespace AmandsSense.Components
                 switch (senseItemColor)
                 {
                     case SenseItemColor.Default:
-                        color = AmandsSensePlugin.ObservedLootItemColor.Value;
+                        color = Settings.ObservedLootItemColor.Value;
                         break;
                     case SenseItemColor.Kappa:
-                        color = AmandsSensePlugin.KappaItemsColor.Value;
+                        color = Settings.KappaItemsColor.Value;
                         break;
                     case SenseItemColor.NonFlea:
-                        color = AmandsSensePlugin.NonFleaItemsColor.Value;
+                        color = Settings.NonFleaItemsColor.Value;
                         if (AmandsSenseClass.LoadedSprites.ContainsKey("icon_barter.png"))
                         {
                             sprite = AmandsSenseClass.LoadedSprites["icon_barter.png"];
                         }
                         break;
                     case SenseItemColor.WishList:
-                        color = AmandsSensePlugin.WishListItemsColor.Value;
+                        color = Settings.WishListItemsColor.Value;
                         if (AmandsSenseClass.LoadedSprites.ContainsKey("icon_fav_checked.png"))
                         {
                             sprite = AmandsSenseClass.LoadedSprites["icon_fav_checked.png"];
                         }
                         break;
                     case SenseItemColor.Rare:
-                        color = AmandsSensePlugin.RareItemsColor.Value;
+                        color = Settings.RareItemsColor.Value;
                         break;
                 }
 
@@ -293,7 +293,7 @@ namespace AmandsSense.Components
                 if (light != null)
                 {
                     light.color = new Color(color.r, color.g, color.b, 1f);
-                    light.range = AmandsSensePlugin.LightRange.Value;
+                    light.range = Settings.LightRange.Value;
                 }
 
                 // SenseContainer Type
@@ -316,7 +316,7 @@ namespace AmandsSense.Components
                 if (descriptionText != null)
                 {
                     descriptionText.fontSize = 0.75f;
-                    if (AmandsSensePlugin.ContainerLootcount.Value)
+                    if (Settings.ContainerLootcount.Value)
                     {
                         descriptionText.text = AmandsSenseHelper.Localized("loot", EStringCase.None) + " " + itemCount;
                     }
@@ -340,7 +340,7 @@ namespace AmandsSense.Components
             }
             if (light != null)
             {
-                light.intensity = AmandsSensePlugin.LightIntensity.Value * Intensity * (Drawer ? 0.25f : 1f);
+                light.intensity = Settings.LightIntensity.Value * Intensity * (Drawer ? 0.25f : 1f);
             }
             if (typeText != null)
             {

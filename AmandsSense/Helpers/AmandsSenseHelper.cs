@@ -6,7 +6,7 @@ using EFT;
 using JsonType;
 using UnityEngine;
 
-namespace AmandsSense.Utils
+namespace AmandsSense.Helpers
 {
     public class AmandsSenseHelper
     {
@@ -49,6 +49,7 @@ namespace AmandsSense.Utils
             ToColorMethod = ToColorType.GetMethods().First((x) => x.Name == "ToColor");
 
         }
+
         public static string Localized(string id, EStringCase @case)
         {
             return (string)LocalizedMethod.Invoke(null, new object[]
@@ -57,6 +58,7 @@ namespace AmandsSense.Utils
                 @case
             });
         }
+
         public static bool IsBoss(WildSpawnType role)
         {
             return (bool)IsBossMethod.Invoke(null, new object[]

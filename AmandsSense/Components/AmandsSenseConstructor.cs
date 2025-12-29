@@ -1,4 +1,5 @@
 ﻿using AmandsSense.Enums;
+using AmandsSense.Helpers;
 using EFT;
 using EFT.Interactive;
 using TMPro;
@@ -11,8 +12,8 @@ namespace AmandsSense.Components
     {
         public AmandsSenseWorld amandsSenseWorld;
 
-        public Color color = AmandsSensePlugin.ObservedLootItemColor.Value;
-        public Color textColor = AmandsSensePlugin.TextColor.Value;
+        public Color color = Settings.ObservedLootItemColor.Value;
+        public Color textColor = Settings.TextColor.Value;
 
         public SpriteRenderer spriteRenderer;
         public Sprite sprite;
@@ -31,7 +32,7 @@ namespace AmandsSense.Components
             GameObject spriteGameObject = new GameObject("Sprite");
             spriteGameObject.transform.SetParent(gameObject.transform, false);
             RectTransform spriteRectTransform = spriteGameObject.AddComponent<RectTransform>();
-            spriteRectTransform.localScale = Vector3.one * AmandsSensePlugin.IconSize.Value;
+            spriteRectTransform.localScale = Vector3.one * Settings.IconSize.Value;
 
             // SenseConstructor Sprite
             spriteRenderer = spriteGameObject.AddComponent<SpriteRenderer>();
@@ -41,17 +42,17 @@ namespace AmandsSense.Components
             // SenseConstructor Sprite Light
             light = spriteGameObject.AddComponent<Light>();
             light.color = new Color(color.r, color.g, color.b, 1f);
-            light.shadows = AmandsSensePlugin.LightShadows.Value ? LightShadows.Hard : LightShadows.None;
+            light.shadows = Settings.LightShadows.Value ? LightShadows.Hard : LightShadows.None;
             light.intensity = 0f;
-            light.range = AmandsSensePlugin.LightRange.Value;
+            light.range = Settings.LightRange.Value;
 
-            if (AmandsSensePlugin.Enabled.Value != EnableSense.OnText) return;
+            if (Settings.Enabled.Value != EnableSense.OnText) return;
 
             // SenseConstructor Text
             textGameObject = new GameObject("Text");
             textGameObject.transform.SetParent(gameObject.transform, false);
             RectTransform textRectTransform = textGameObject.AddComponent<RectTransform>();
-            textRectTransform.localPosition = new Vector3(AmandsSensePlugin.TextOffset.Value, 0, 0);
+            textRectTransform.localPosition = new Vector3(Settings.TextOffset.Value, 0, 0);
             textRectTransform.pivot = new Vector2(0, 0.5f);
 
             // SenseConstructor VerticalLayoutGroup
