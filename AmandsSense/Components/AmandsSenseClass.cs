@@ -53,8 +53,6 @@ namespace AmandsSense.Components
         public static List<AmandsSenseExfil> SenseExfils = new List<AmandsSenseExfil>();
         public static AmandsSenseExfil ClosestAmandsSenseExfil = null;
 
-        public static List<Item> SenseItems = new List<Item>();
-
         public static Transform parent;
 
         public static string scene;
@@ -195,6 +193,8 @@ namespace AmandsSense.Components
         }
         public void SenseDeadBodies()
         {
+            if (!Settings.EnableBodies.Value) return;
+
             foreach (SenseDeadPlayer deadPlayer in DeadPlayers)
             {
                 if (Vector3.Distance(Player.Position, deadPlayer.victim.Position) < Settings.DeadPlayerRadius.Value)
@@ -470,18 +470,24 @@ namespace AmandsSense.Components
             if (!onlySounds)
             {
                 string imagesPath = Path.Combine(AmandsSensePlugin.PluginFolder, "images");
-                string[] Files = Directory.GetFiles(imagesPath, "*.png");
-                foreach (string File in Files)
+                if (Directory.Exists(imagesPath))
                 {
-                    LoadSprite(File);
+                    string[] Files = Directory.GetFiles(imagesPath, "*.png");
+                    foreach (string File in Files)
+                    {
+                        LoadSprite(File);
+                    }
                 }
             }
 
             string soundsPath = Path.Combine(AmandsSensePlugin.PluginFolder, "sounds");
-            string[] AudioFiles = Directory.GetFiles(soundsPath);
-            foreach (string File in AudioFiles)
+            if (Directory.Exists(soundsPath))
             {
-                LoadAudioClip(File);
+                string[] AudioFiles = Directory.GetFiles(soundsPath);
+                foreach (string File in AudioFiles)
+                {
+                    LoadAudioClip(File);
+                }
             }
         }
         async static void LoadSprite(string path)
@@ -496,7 +502,7 @@ namespace AmandsSense.Components
             while (!SendWeb.isDone)
                 await Task.Yield();
 
-            if (www.isNetworkError || www.isHttpError)
+            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {
                 return null;
             }
@@ -531,7 +537,7 @@ namespace AmandsSense.Components
             while (!SendWeb.isDone)
                 await Task.Yield();
 
-            if (www.isNetworkError || www.isHttpError)
+            if (www.result == UnityWebRequest.Result.ConnectionError || www.result == UnityWebRequest.Result.ProtocolError)
             {
                 return null;
             }

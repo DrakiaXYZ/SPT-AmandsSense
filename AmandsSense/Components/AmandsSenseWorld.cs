@@ -27,14 +27,20 @@ namespace AmandsSense.Components
         public bool Starting = true;
         public float Intensity = 0f;
 
+        public bool DisableGlow = false;
+
         private GameObject amandsSenseConstructorGameObject;
         private AmandsSenseConstructor amandsSenseConstructor;
 
         public void Start()
         {
+            DisableGlow = AmandsSenseHelper.IsNightVisionActive(AmandsSenseClass.Player);
+            AmandsSenseClass.Player.NightVisionObserver.Changed.Subscribe(NVGChanged);
+
             enabled = false;
             WaitAndStart();
         }
+
         private async void WaitAndStart()
         {
             Waiting = true;
@@ -74,6 +80,12 @@ namespace AmandsSense.Components
                     ObservedLootItem observedLootItem = OwnerGameObject.GetComponent<ObservedLootItem>();
                     if (observedLootItem != null)
                     {
+                        if (!Settings.EnableLooseLoot.Value)
+                        {
+                            RemoveSense();
+                            return;
+                        }
+
                         SenseWorldType = SenseWorldType.Item;
                         amandsSenseConstructor = amandsSenseConstructorGameObject.AddComponent<AmandsSenseItem>();
                         amandsSenseConstructor.amandsSenseWorld = this;
@@ -85,6 +97,12 @@ namespace AmandsSense.Components
                         LootableContainer lootableContainer = OwnerGameObject.GetComponent<LootableContainer>();
                         if (lootableContainer != null)
                         {
+                            if (!Settings.EnableContainers.Value)
+                            {
+                                RemoveSense();
+                                return;
+                            }
+
                             if (lootableContainer.Template == "578f87b7245977356274f2cd")
                             {
                                 SenseWorldType = SenseWorldType.Drawer;
@@ -108,26 +126,21 @@ namespace AmandsSense.Components
                         }
                     }
                 }
-                else
+                else if (SenseWorldType == SenseWorldType.Deadbody)
                 {
-                    switch (SenseWorldType)
+                    if (!Settings.EnableBodies.Value)
                     {
-                        case SenseWorldType.Item:
-                            break;
-                        case SenseWorldType.Container:
-                            break;
-                        case SenseWorldType.Drawer:
-                            break;
-                        case SenseWorldType.Deadbody:
-                            amandsSenseConstructor = amandsSenseConstructorGameObject.AddComponent<AmandsSenseDeadPlayer>();
-                            amandsSenseConstructor.amandsSenseWorld = this;
-                            amandsSenseConstructor.Construct();
-                            amandsSenseConstructor.SetSense(SenseDeadPlayer);
-                            break;
+                        RemoveSense();
+                        return;
                     }
+
+                    amandsSenseConstructor = amandsSenseConstructorGameObject.AddComponent<AmandsSenseDeadPlayer>();
+                    amandsSenseConstructor.amandsSenseWorld = this;
+                    amandsSenseConstructor.Construct();
+                    amandsSenseConstructor.SetSense(SenseDeadPlayer);
                 }
 
-                // SenseWorld Starting Posittion
+                // SenseWorld Starting Position
                 switch (SenseWorldType)
                 {
                     case SenseWorldType.Item:
@@ -246,7 +259,10 @@ namespace AmandsSense.Components
                     }
                 }
 
-                if (amandsSenseConstructor != null) amandsSenseConstructor.UpdateIntensity(Intensity);
+                if (amandsSenseConstructor != null)
+                {
+                    amandsSenseConstructor.UpdateIntensity(Intensity);
+                }
 
             }
             else if (!Starting && !Waiting)
@@ -257,6 +273,7 @@ namespace AmandsSense.Components
                     UpdateIntensity = true;
                 }
             }
+
             if (Camera.main != null)
             {
                 switch (SenseWorldType)
@@ -270,6 +287,16 @@ namespace AmandsSense.Components
                     case SenseWorldType.Drawer:
                         break;
                 }
+            }
+        }
+
+        private void NVGChanged()
+        {
+            DisableGlow = AmandsSenseHelper.IsNightVisionActive(AmandsSenseClass.Player);
+
+            if (amandsSenseConstructor != null && !Starting)
+            {
+                amandsSenseConstructor.UpdateIntensity(Intensity);
             }
         }
     }

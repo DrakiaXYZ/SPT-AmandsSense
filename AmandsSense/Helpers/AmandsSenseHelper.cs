@@ -1,9 +1,11 @@
-using System;
-using System.Reflection;
-using SPT.Reflection.Utils;
-using System.Linq;
 using EFT;
+using EFT.InventoryLogic;
 using JsonType;
+using SPT.Reflection.Utils;
+using System;
+using System.Linq;
+using System.Reflection;
+using TMPro;
 using UnityEngine;
 
 namespace AmandsSense.Helpers
@@ -55,6 +57,27 @@ namespace AmandsSense.Helpers
             {
                 taxonomyColor
             });
+        }
+
+        public static bool IsNightVisionActive(Player player)
+        {
+            NightVisionComponent nvComponent = player.NightVisionObserver.Component;
+            if (nvComponent != null && nvComponent.Togglable.On)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static void SetTextOutline(TextMeshPro textMeshPro, float outlineWidth, Color outlineColor)
+        {
+            Material fontMaterial = textMeshPro.fontMaterial;
+            fontMaterial.EnableKeyword("OUTLINE_ON");
+            fontMaterial.SetFloat("_OutlineWidth", outlineWidth);
+            fontMaterial.SetColor("_OutlineColor", outlineColor);
+
+            textMeshPro.UpdateMeshPadding();
         }
     }
 }

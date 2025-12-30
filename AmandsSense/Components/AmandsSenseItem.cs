@@ -5,7 +5,6 @@ using EFT;
 using EFT.Interactive;
 using EFT.InventoryLogic;
 using EFT.UI;
-using HarmonyLib;
 using System.Linq;
 using UnityEngine;
 
@@ -36,7 +35,7 @@ namespace AmandsSense.Components
                     }
                 }
 
-                AmandsSenseClass.SenseItems.Add(observedLootItem.Item);
+                ObservedLootItem.ItemOwner.RemoveItemEvent += RemoveLootItem;
 
                 // Weapon SenseItem Color, Sprite and Type
                 Weapon weapon = observedLootItem.Item as Weapon;
@@ -610,7 +609,14 @@ namespace AmandsSense.Components
             }
             if (light != null)
             {
-                light.intensity = Settings.LightIntensity.Value * Intensity;
+                if (amandsSenseWorld.DisableGlow)
+                {
+                    light.intensity = 0;
+                }
+                else
+                {
+                    light.intensity = Settings.LightIntensity.Value * Intensity;
+                }
             }
             if (typeText != null)
             {
@@ -627,11 +633,22 @@ namespace AmandsSense.Components
         }
         public override void RemoveSense()
         {
-            if (observedLootItem != null && observedLootItem.gameObject.activeSelf && observedLootItem.Item != null)
+            if (observedLootItem != null && observedLootItem.ItemOwner != null)
             {
-                AmandsSenseClass.SenseItems.Remove(observedLootItem.Item);
+                observedLootItem.ItemOwner.RemoveItemEvent -= RemoveLootItem;
             }
+
             //Destroy(gameObject);
+        }
+
+        private void RemoveLootItem(GEventArgs3 args)
+        {
+            if (args.Status != CommandStatus.Succeed)
+            {
+                return;
+            }
+
+            amandsSenseWorld.RemoveSense();
         }
     }
 }

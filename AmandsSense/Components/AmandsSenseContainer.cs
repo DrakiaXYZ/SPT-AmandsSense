@@ -4,8 +4,6 @@ using Comfort.Common;
 using EFT;
 using EFT.Interactive;
 using EFT.InventoryLogic;
-using HarmonyLib;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace AmandsSense.Components
@@ -280,7 +278,14 @@ namespace AmandsSense.Components
             }
             if (light != null)
             {
-                light.intensity = Settings.LightIntensity.Value * Intensity * (Drawer ? 0.25f : 1f);
+                if (amandsSenseWorld.DisableGlow)
+                {
+                    light.intensity = 0;
+                }
+                else
+                {
+                    light.intensity = Settings.LightIntensity.Value * Intensity * (Drawer ? 0.25f : 1f);
+                }
             }
             if (typeText != null)
             {

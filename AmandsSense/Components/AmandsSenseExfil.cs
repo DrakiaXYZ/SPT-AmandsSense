@@ -14,6 +14,7 @@ namespace AmandsSense.Components
 
         public Color color = Color.green;
         public Color textColor = Settings.TextColor.Value;
+        private Color outlineColor = Color.black;
 
         public SpriteRenderer spriteRenderer;
         public Sprite sprite;
@@ -29,11 +30,18 @@ namespace AmandsSense.Components
 
         public float Delay;
         public float LifeSpan;
-
-        public bool UpdateIntensity = false;
-        public bool Starting = true;
-        public float Intensity = 0f;
+        private bool disableGlow;
+        private bool updateIntensity = false;
+        private bool starting = true;
         private float lastDrawUpdateTime = 0f;
+
+        public float Intensity = 0f;
+
+        public void Start()
+        {
+            disableGlow = AmandsSenseHelper.IsNightVisionActive(AmandsSenseClass.Player);
+            AmandsSenseClass.Player.NightVisionObserver.Changed.Subscribe(NVGChanged);
+        }
 
         public void SetSense(ExfiltrationPoint ExfiltrationPoint)
         {
@@ -87,6 +95,7 @@ namespace AmandsSense.Components
             typeText.fontSize = 0.5f;
             typeText.text = "Type";
             typeText.color = new Color(color.r, color.g, color.b, 0f);
+            AmandsSenseHelper.SetTextOutline(typeText, 0.08f, outlineColor);
 
             GameObject nameTextGameObject = new GameObject("Name");
             nameTextGameObject.transform.SetParent(textGameObject.transform, false);
@@ -95,6 +104,7 @@ namespace AmandsSense.Components
             nameText.fontSize = 1f;
             nameText.text = "Name";
             nameText.color = new Color(textColor.r, textColor.g, textColor.b, 0f);
+            AmandsSenseHelper.SetTextOutline(nameText, 0.125f, outlineColor);
 
             GameObject descriptionTextGameObject = new GameObject("Description");
             descriptionTextGameObject.transform.SetParent(textGameObject.transform, false);
@@ -103,6 +113,7 @@ namespace AmandsSense.Components
             descriptionText.fontSize = 0.75f;
             descriptionText.text = "";
             descriptionText.color = new Color(textColor.r, textColor.g, textColor.b, 0f);
+            AmandsSenseHelper.SetTextOutline(descriptionText, 0.1f, outlineColor);
 
             GameObject distanceTextGameObject = new GameObject("Distance");
             distanceTextGameObject.transform.SetParent(gameObject.transform, false);
@@ -113,6 +124,7 @@ namespace AmandsSense.Components
             distanceText.fontSize = 0.75f;
             distanceText.text = "Distance";
             distanceText.color = new Color(color.r, color.g, color.b, 0f);
+            AmandsSenseHelper.SetTextOutline(distanceText, 0.1f, outlineColor);
 
             enabled = false;
             gameObject.SetActive(false);
@@ -187,9 +199,9 @@ namespace AmandsSense.Components
                 enabled = true;
 
                 LifeSpan = 0f;
-                Starting = true;
+                starting = true;
                 Intensity = 0f;
-                UpdateIntensity = true;
+                updateIntensity = true;
             }
             if (exfiltrationPoint == null)
             {
@@ -267,15 +279,15 @@ namespace AmandsSense.Components
         }
         public void Update()
         {
-            if (UpdateIntensity)
+            if (updateIntensity)
             {
-                if (Starting)
+                if (starting)
                 {
                     Intensity += Settings.IntensitySpeed.Value * Time.deltaTime;
                     if (Intensity >= 1f)
                     {
-                        UpdateIntensity = false;
-                        Starting = false;
+                        updateIntensity = false;
+                        starting = false;
                     }
                 }
                 else
@@ -283,45 +295,22 @@ namespace AmandsSense.Components
                     Intensity -= Settings.IntensitySpeed.Value * Time.deltaTime;
                     if (Intensity <= 0f)
                     {
-                        Starting = true;
-                        UpdateIntensity = false;
+                        starting = true;
+                        updateIntensity = false;
                         enabled = false;
                         gameObject.SetActive(false);
                         return;
                     }
                 }
 
-                if (spriteRenderer != null)
-                {
-                    spriteRenderer.color = new Color(color.r, color.g, color.b, color.a * Intensity);
-                }
-                if (light != null)
-                {
-                    light.intensity = Intensity * Settings.ExfilLightIntensity.Value;
-                }
-                if (typeText != null)
-                {
-                    typeText.color = new Color(color.r, color.g, color.b, Intensity);
-                }
-                if (nameText != null)
-                {
-                    nameText.color = new Color(textColor.r, textColor.g, textColor.b, Intensity);
-                }
-                if (descriptionText != null)
-                {
-                    descriptionText.color = new Color(textColor.r, textColor.g, textColor.b, Intensity);
-                }
-                if (distanceText != null)
-                {
-                    distanceText.color = new Color(color.r, color.g, color.b, Intensity);
-                }
+                UpdateIntensity(Intensity);
             }
-            else if (!Starting)
+            else if (!starting)
             {
                 LifeSpan += Time.deltaTime;
                 if (LifeSpan > Settings.ExfilDuration.Value)
                 {
-                    UpdateIntensity = true;
+                    updateIntensity = true;
                 }
             }
 
@@ -336,6 +325,51 @@ namespace AmandsSense.Components
                     lastDrawUpdateTime = 0f;
                     distanceText.text = (int)Vector3.Distance(transform.position, Camera.main.transform.position) + "m";
                 }
+            }
+        }
+
+        private void UpdateIntensity(float Intensity)
+        {
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.color = new Color(color.r, color.g, color.b, color.a * Intensity);
+            }
+            if (light != null)
+            {
+                if (disableGlow)
+                {
+                    light.intensity = 0;
+                }
+                else
+                {
+                    light.intensity = Intensity * Settings.ExfilLightIntensity.Value;
+                }
+            }
+            if (typeText != null)
+            {
+                typeText.color = new Color(color.r, color.g, color.b, Intensity);
+            }
+            if (nameText != null)
+            {
+                nameText.color = new Color(textColor.r, textColor.g, textColor.b, Intensity);
+            }
+            if (descriptionText != null)
+            {
+                descriptionText.color = new Color(textColor.r, textColor.g, textColor.b, Intensity);
+            }
+            if (distanceText != null)
+            {
+                distanceText.color = new Color(color.r, color.g, color.b, Intensity);
+            }
+        }
+
+        private void NVGChanged()
+        {
+            disableGlow = AmandsSenseHelper.IsNightVisionActive(AmandsSenseClass.Player);
+
+            if (!starting)
+            {
+                UpdateIntensity(Intensity);
             }
         }
     }

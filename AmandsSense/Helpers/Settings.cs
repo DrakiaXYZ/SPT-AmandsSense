@@ -7,9 +7,17 @@ namespace AmandsSense.Helpers
 {
     internal class Settings
     {
+        private static string senseSectionTitle = "AmandsSense";
+        private static string effectsSectionTitle = "AmandsSense Effects";
+        private static string colorsSectionTitle = "Colors";
+
         public static ConfigEntry<EnableSense> Enabled { get; set; }
         public static ConfigEntry<bool> EnableExfilSense { get; set; }
         public static ConfigEntry<bool> SenseAlwaysOn { get; set; }
+
+        public static ConfigEntry<bool> EnableContainers { get; set; }
+        public static ConfigEntry<bool> EnableBodies { get; set; }
+        public static ConfigEntry<bool> EnableLooseLoot { get; set; }
 
         public static ConfigEntry<KeyboardShortcut> SenseKey { get; set; }
         public static ConfigEntry<bool> DoubleClick { get; set; }
@@ -141,125 +149,129 @@ namespace AmandsSense.Helpers
                 // Valid Config File
             }
 
-            Enabled = Config.Bind("AmandsSense", "EnableSense", EnableSense.OnText, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 380 }));
-            EnableExfilSense = Config.Bind("AmandsSense", "EnableExfilSense", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 370 }));
-            SenseAlwaysOn = Config.Bind("AmandsSense", "AlwaysOn", false, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 360 }));
+            Enabled = Config.Bind(senseSectionTitle, "EnableSense", EnableSense.OnText, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 380 }));
+            EnableExfilSense = Config.Bind(senseSectionTitle, "EnableExfilSense", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 370 }));
+            SenseAlwaysOn = Config.Bind(senseSectionTitle, "AlwaysOn", false, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 360 }));
 
-            SenseKey = Config.Bind("AmandsSense", "SenseKey", new KeyboardShortcut(KeyCode.F), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 350 }));
-            DoubleClick = Config.Bind("AmandsSense", "DoubleClick", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 340, IsAdvanced = true }));
-            Cooldown = Config.Bind("AmandsSense", "Cooldown", 2f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 330, IsAdvanced = true }));
+            EnableContainers = Config.Bind(senseSectionTitle, "EnableContainers", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 355 }));
+            EnableBodies = Config.Bind(senseSectionTitle, "EnableBodies", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 355 }));
+            EnableLooseLoot = Config.Bind(senseSectionTitle, "EnableLooseLoot", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 355 }));
 
-            Duration = Config.Bind("AmandsSense", "Duration", 10f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 320 }));
-            ExfilDuration = Config.Bind("AmandsSense", "Exfil Duration", 30f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 320 }));
-            Radius = Config.Bind("AmandsSense", "Radius", 10, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 310 }));
-            DeadPlayerRadius = Config.Bind("AmandsSense", "DeadPlayerRadius", 20, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 310 }));
-            Speed = Config.Bind("AmandsSense", "Speed", 20f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 300 }));
-            MaxHeight = Config.Bind("AmandsSense", "MaxHeight", 3f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 290, IsAdvanced = true }));
-            MinHeight = Config.Bind("AmandsSense", "MinHeight", -1f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 280, IsAdvanced = true }));
+            SenseKey = Config.Bind(senseSectionTitle, "SenseKey", new KeyboardShortcut(KeyCode.F), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 350 }));
+            DoubleClick = Config.Bind(senseSectionTitle, "DoubleClick", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 340, IsAdvanced = true }));
+            Cooldown = Config.Bind(senseSectionTitle, "Cooldown", 2f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 330, IsAdvanced = true }));
 
-            ContainerLootcount = Config.Bind("AmandsSense", "ContainerLootcount", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 272, IsAdvanced = true }));
-            EnableFlea = Config.Bind("AmandsSense", "Enable Flea", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 270 }));
-            FleaIncludeAmmo = Config.Bind("AmandsSense", "Flea Include Ammo", false, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 260 }));
+            Duration = Config.Bind(senseSectionTitle, "Duration", 10f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 320 }));
+            ExfilDuration = Config.Bind(senseSectionTitle, "Exfil Duration", 30f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 320 }));
+            Radius = Config.Bind(senseSectionTitle, "Radius", 10, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 310 }));
+            DeadPlayerRadius = Config.Bind(senseSectionTitle, "DeadPlayerRadius", 20, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 310 }));
+            Speed = Config.Bind(senseSectionTitle, "Speed", 20f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 300 }));
+            MaxHeight = Config.Bind(senseSectionTitle, "MaxHeight", 3f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 290, IsAdvanced = true }));
+            MinHeight = Config.Bind(senseSectionTitle, "MinHeight", -1f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 280, IsAdvanced = true }));
 
-            UseBackgroundColor = Config.Bind("AmandsSense", "Use Background Color", false, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 250 }));
+            ContainerLootcount = Config.Bind(senseSectionTitle, "ContainerLootcount", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 272, IsAdvanced = true }));
+            EnableFlea = Config.Bind(senseSectionTitle, "Enable Flea", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 270 }));
+            FleaIncludeAmmo = Config.Bind(senseSectionTitle, "Flea Include Ammo", false, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 260 }));
 
-            Size = Config.Bind("AmandsSense", "Size", 0.5f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 250 }));
-            IconSize = Config.Bind("AmandsSense", "IconSize", 0.1f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 240 }));
-            SizeClamp = Config.Bind("AmandsSense", "Size Clamp", 3.0f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 230, IsAdvanced = true }));
+            UseBackgroundColor = Config.Bind(senseSectionTitle, "Use Background Color", false, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 255 }));
 
-            VerticalOffset = Config.Bind("AmandsSense", "Vertical Offset", 0.22f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 220, IsAdvanced = true }));
-            TextOffset = Config.Bind("AmandsSense", "Text Offset", 0.15f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 217, IsAdvanced = true }));
-            ExfilVerticalOffset = Config.Bind("AmandsSense", "ExfilVertical Offset", 40f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 215, IsAdvanced = true }));
+            Size = Config.Bind(senseSectionTitle, "Size", 0.5f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 250 }));
+            IconSize = Config.Bind(senseSectionTitle, "IconSize", 0.1f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 240 }));
+            SizeClamp = Config.Bind(senseSectionTitle, "Size Clamp", 3.0f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 230, IsAdvanced = true }));
 
-            IntensitySpeed = Config.Bind("AmandsSense", "Intensity Speed", 2f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 210, IsAdvanced = true }));
+            VerticalOffset = Config.Bind(senseSectionTitle, "Vertical Offset", 0.22f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 220, IsAdvanced = true }));
+            TextOffset = Config.Bind(senseSectionTitle, "Text Offset", 0.15f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 217, IsAdvanced = true }));
+            ExfilVerticalOffset = Config.Bind(senseSectionTitle, "ExfilVertical Offset", 40f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 215, IsAdvanced = true }));
 
-            AlwaysOnFrequency = Config.Bind("AmandsSense", "AlwaysOn Frequency", 2f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 200, IsAdvanced = true }));
+            IntensitySpeed = Config.Bind(senseSectionTitle, "Intensity Speed", 2f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 210, IsAdvanced = true }));
 
-            LightIntensity = Config.Bind("AmandsSense", "LightIntensity", 0.6f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 190 }));
-            LightRange = Config.Bind("AmandsSense", "LightRange", 2.5f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 180 }));
-            LightShadows = Config.Bind("AmandsSense", "LightShadows", false, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 170, IsAdvanced = true }));
+            AlwaysOnFrequency = Config.Bind(senseSectionTitle, "AlwaysOn Frequency", 2f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 200, IsAdvanced = true }));
 
-            ExfilLightIntensity = Config.Bind("AmandsSense", "Exfil LightIntensity", 1.0f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 160 }));
-            ExfilLightRange = Config.Bind("AmandsSense", "Exfil LightRange", 50f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 150 }));
-            ExfilLightShadows = Config.Bind("AmandsSense", "Exfil LightShadows", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 140 }));
+            LightIntensity = Config.Bind(senseSectionTitle, "LightIntensity", 0.6f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 190 }));
+            LightRange = Config.Bind(senseSectionTitle, "LightRange", 2.5f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 180 }));
+            LightShadows = Config.Bind(senseSectionTitle, "LightShadows", false, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 170, IsAdvanced = true }));
 
-            AudioDistance = Config.Bind("AmandsSense", "AudioDistance", 99f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 130, IsAdvanced = true }));
-            AudioRolloff = Config.Bind("AmandsSense", "AudioRolloff", 100, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 120, IsAdvanced = true }));
-            AudioVolume = Config.Bind("AmandsSense", "AudioVolume", 0.5f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 112 }));
-            ContainerAudioVolume = Config.Bind("AmandsSense", "ContainerAudioVolume", 0.5f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 110 }));
-            ActivateSenseVolume = Config.Bind("AmandsSense", "ActivateSenseVolume", 0.5f, new ConfigDescription("requires a custom sound .wav file named Sense.wav", null, new ConfigurationManagerAttributes { Order = 108 }));
-            SenseRareSound = Config.Bind("AmandsSense", "SenseRareSound", false, new ConfigDescription("requires a custom sound .wav file named SenseRare.wav", null, new ConfigurationManagerAttributes { Order = 106 }));
+            ExfilLightIntensity = Config.Bind(senseSectionTitle, "Exfil LightIntensity", 1.0f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 160 }));
+            ExfilLightRange = Config.Bind(senseSectionTitle, "Exfil LightRange", 50f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 150 }));
+            ExfilLightShadows = Config.Bind(senseSectionTitle, "Exfil LightShadows", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 140 }));
 
-            useDof = Config.Bind("AmandsSense Effects", "useDof", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 100 }));
+            AudioDistance = Config.Bind(senseSectionTitle, "AudioDistance", 99f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 130, IsAdvanced = true }));
+            AudioRolloff = Config.Bind(senseSectionTitle, "AudioRolloff", 100, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 120, IsAdvanced = true }));
+            AudioVolume = Config.Bind(senseSectionTitle, "AudioVolume", 0.5f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 112 }));
+            ContainerAudioVolume = Config.Bind(senseSectionTitle, "ContainerAudioVolume", 0.5f, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 110 }));
+            ActivateSenseVolume = Config.Bind(senseSectionTitle, "ActivateSenseVolume", 0.5f, new ConfigDescription("requires a custom sound .wav file named Sense.wav", null, new ConfigurationManagerAttributes { Order = 108 }));
+            SenseRareSound = Config.Bind(senseSectionTitle, "SenseRareSound", false, new ConfigDescription("requires a custom sound .wav file named SenseRare.wav", null, new ConfigurationManagerAttributes { Order = 106 }));
 
-            ExfilColor = Config.Bind("Colors", "ExfilColor", new Color(0.01f, 1.0f, 0.01f, 1.0f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 570 }));
-            ExfilUnmetColor = Config.Bind("Colors", "ExfilUnmetColor", new Color(1.0f, 0.01f, 0.01f, 1.0f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 560 }));
+            useDof = Config.Bind(effectsSectionTitle, "useDof", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 100 }));
 
-            TextColor = Config.Bind("Colors", "TextColor", new Color(0.84f, 0.88f, 0.95f, 1.0f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 550 }));
+            ExfilColor = Config.Bind(colorsSectionTitle, "ExfilColor", new Color(0.01f, 1.0f, 0.01f, 1.0f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 570 }));
+            ExfilUnmetColor = Config.Bind(colorsSectionTitle, "ExfilUnmetColor", new Color(1.0f, 0.01f, 0.01f, 1.0f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 560 }));
 
-            RareItemsColor = Config.Bind("Colors", "RareItemsColor", new Color(1.0f, 0.01f, 0.01f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 540 }));
-            WishListItemsColor = Config.Bind("Colors", "WishListItemsColor", new Color(1.0f, 0.01f, 0.2f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 530 }));
-            NonFleaItemsColor = Config.Bind("Colors", "NonFleaItemsColor", new Color(1.0f, 0.12f, 0.01f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 520 }));
-            KappaItemsColor = Config.Bind("Colors", "KappaItemsColor", new Color(1.0f, 1.0f, 0.01f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 510 }));
+            TextColor = Config.Bind(colorsSectionTitle, "TextColor", new Color(0.84f, 0.88f, 0.95f, 1.0f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 550 }));
 
-            LootableContainerColor = Config.Bind("Colors", "LootableContainerColor", new Color(0.36f, 0.18f, 1.0f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 500 }));
-            ObservedLootItemColor = Config.Bind("Colors", "ObservedLootItemColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 490 }));
+            RareItemsColor = Config.Bind(colorsSectionTitle, "RareItemsColor", new Color(1.0f, 0.01f, 0.01f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 540 }));
+            WishListItemsColor = Config.Bind(colorsSectionTitle, "WishListItemsColor", new Color(1.0f, 0.01f, 0.2f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 530 }));
+            NonFleaItemsColor = Config.Bind(colorsSectionTitle, "NonFleaItemsColor", new Color(1.0f, 0.12f, 0.01f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 520 }));
+            KappaItemsColor = Config.Bind(colorsSectionTitle, "KappaItemsColor", new Color(1.0f, 1.0f, 0.01f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 510 }));
 
-            OthersColor = Config.Bind("Colors", "OthersColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 480 }));
-            BuildingMaterialsColor = Config.Bind("Colors", "BuildingMaterialsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 470 }));
-            ElectronicsColor = Config.Bind("Colors", "ElectronicsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 460 }));
-            EnergyElementsColor = Config.Bind("Colors", "EnergyElementsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 450 }));
-            FlammableMaterialsColor = Config.Bind("Colors", "FlammableMaterialsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 440 }));
-            HouseholdMaterialsColor = Config.Bind("Colors", "HouseholdMaterialsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 430 }));
-            MedicalSuppliesColor = Config.Bind("Colors", "MedicalSuppliesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 420 }));
-            ToolsColor = Config.Bind("Colors", "ToolsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 410 }));
-            ValuablesColor = Config.Bind("Colors", "ValuablesColor", new Color(0.36f, 0.18f, 1.0f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 400 }));
+            LootableContainerColor = Config.Bind(colorsSectionTitle, "LootableContainerColor", new Color(0.36f, 0.18f, 1.0f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 500 }));
+            ObservedLootItemColor = Config.Bind(colorsSectionTitle, "ObservedLootItemColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 490 }));
 
-            BackpacksColor = Config.Bind("Colors", "BackpacksColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 390 }));
-            BodyArmorColor = Config.Bind("Colors", "BodyArmorColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 380 }));
-            EyewearColor = Config.Bind("Colors", "EyewearColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 370 }));
-            FacecoversColor = Config.Bind("Colors", "FacecoversColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 360 }));
-            GearComponentsColor = Config.Bind("Colors", "GearComponentsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 350 }));
-            HeadgearColor = Config.Bind("Colors", "HeadgearColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 340 }));
-            HeadsetsColor = Config.Bind("Colors", "HeadsetsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 330 }));
-            SecureContainersColor = Config.Bind("Colors", "SecureContainersColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 320 }));
-            StorageContainersColor = Config.Bind("Colors", "StorageContainersColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 310 }));
-            TacticalRigsColor = Config.Bind("Colors", "TacticalRigsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 300 }));
+            OthersColor = Config.Bind(colorsSectionTitle, "OthersColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 480 }));
+            BuildingMaterialsColor = Config.Bind(colorsSectionTitle, "BuildingMaterialsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 470 }));
+            ElectronicsColor = Config.Bind(colorsSectionTitle, "ElectronicsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 460 }));
+            EnergyElementsColor = Config.Bind(colorsSectionTitle, "EnergyElementsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 450 }));
+            FlammableMaterialsColor = Config.Bind(colorsSectionTitle, "FlammableMaterialsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 440 }));
+            HouseholdMaterialsColor = Config.Bind(colorsSectionTitle, "HouseholdMaterialsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 430 }));
+            MedicalSuppliesColor = Config.Bind(colorsSectionTitle, "MedicalSuppliesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 420 }));
+            ToolsColor = Config.Bind(colorsSectionTitle, "ToolsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 410 }));
+            ValuablesColor = Config.Bind(colorsSectionTitle, "ValuablesColor", new Color(0.36f, 0.18f, 1.0f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 400 }));
 
-            FunctionalModsColor = Config.Bind("Colors", "FunctionalModsColor", new Color(0.1f, 0.35f, 0.65f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 290 }));
-            GearModsColor = Config.Bind("Colors", "GearModsColor", new Color(0.15f, 0.5f, 0.1f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 280 }));
-            VitalPartsColor = Config.Bind("Colors", "VitalPartsColor", new Color(0.7f, 0.2f, 0.1f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 270 }));
+            BackpacksColor = Config.Bind(colorsSectionTitle, "BackpacksColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 390 }));
+            BodyArmorColor = Config.Bind(colorsSectionTitle, "BodyArmorColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 380 }));
+            EyewearColor = Config.Bind(colorsSectionTitle, "EyewearColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 370 }));
+            FacecoversColor = Config.Bind(colorsSectionTitle, "FacecoversColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 360 }));
+            GearComponentsColor = Config.Bind(colorsSectionTitle, "GearComponentsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 350 }));
+            HeadgearColor = Config.Bind(colorsSectionTitle, "HeadgearColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 340 }));
+            HeadsetsColor = Config.Bind(colorsSectionTitle, "HeadsetsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 330 }));
+            SecureContainersColor = Config.Bind(colorsSectionTitle, "SecureContainersColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 320 }));
+            StorageContainersColor = Config.Bind(colorsSectionTitle, "StorageContainersColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 310 }));
+            TacticalRigsColor = Config.Bind(colorsSectionTitle, "TacticalRigsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 300 }));
 
-            AssaultCarbinesColor = Config.Bind("Colors", "AssaultCarbinesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 260 }));
-            AssaultRiflesColor = Config.Bind("Colors", "AssaultRiflesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 250 }));
-            BoltActionRiflesColor = Config.Bind("Colors", "BoltActionRiflesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 240 }));
-            GrenadeLaunchersColor = Config.Bind("Colors", "GrenadeLaunchersColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 230 }));
-            MachineGunsColor = Config.Bind("Colors", "MachineGunsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 220 }));
-            MarksmanRiflesColor = Config.Bind("Colors", "MarksmanRiflesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 210 }));
-            MeleeWeaponsColor = Config.Bind("Colors", "MeleeWeaponsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 200 }));
-            PistolsColor = Config.Bind("Colors", "PistolsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 190 }));
-            SMGsColor = Config.Bind("Colors", "SMGsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 180 }));
-            ShotgunsColor = Config.Bind("Colors", "ShotgunsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 170 }));
-            SpecialWeaponsColor = Config.Bind("Colors", "SpecialWeaponsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 160 }));
-            ThrowablesColor = Config.Bind("Colors", "ThrowablesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 150 }));
+            FunctionalModsColor = Config.Bind(colorsSectionTitle, "FunctionalModsColor", new Color(0.1f, 0.35f, 0.65f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 290 }));
+            GearModsColor = Config.Bind(colorsSectionTitle, "GearModsColor", new Color(0.15f, 0.5f, 0.1f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 280 }));
+            VitalPartsColor = Config.Bind(colorsSectionTitle, "VitalPartsColor", new Color(0.7f, 0.2f, 0.1f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 270 }));
 
-            AmmoPacksColor = Config.Bind("Colors", "AmmoPacksColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 140 }));
-            RoundsColor = Config.Bind("Colors", "RoundsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 130 }));
-            DrinksColor = Config.Bind("Colors", "DrinksColor", new Color(0.13f, 0.66f, 1.0f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 120 }));
-            FoodColor = Config.Bind("Colors", "FoodColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 110 }));
-            InjectorsColor = Config.Bind("Colors", "InjectorsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 100 }));
-            InjuryTreatmentColor = Config.Bind("Colors", "InjuryTreatmentColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 90 }));
-            MedkitsColor = Config.Bind("Colors", "MedkitsColor", new Color(0.3f, 1.0f, 0.13f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 80 }));
-            PillsColor = Config.Bind("Colors", "PillsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 70 }));
+            AssaultCarbinesColor = Config.Bind(colorsSectionTitle, "AssaultCarbinesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 260 }));
+            AssaultRiflesColor = Config.Bind(colorsSectionTitle, "AssaultRiflesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 250 }));
+            BoltActionRiflesColor = Config.Bind(colorsSectionTitle, "BoltActionRiflesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 240 }));
+            GrenadeLaunchersColor = Config.Bind(colorsSectionTitle, "GrenadeLaunchersColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 230 }));
+            MachineGunsColor = Config.Bind(colorsSectionTitle, "MachineGunsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 220 }));
+            MarksmanRiflesColor = Config.Bind(colorsSectionTitle, "MarksmanRiflesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 210 }));
+            MeleeWeaponsColor = Config.Bind(colorsSectionTitle, "MeleeWeaponsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 200 }));
+            PistolsColor = Config.Bind(colorsSectionTitle, "PistolsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 190 }));
+            SMGsColor = Config.Bind(colorsSectionTitle, "SMGsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 180 }));
+            ShotgunsColor = Config.Bind(colorsSectionTitle, "ShotgunsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 170 }));
+            SpecialWeaponsColor = Config.Bind(colorsSectionTitle, "SpecialWeaponsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 160 }));
+            ThrowablesColor = Config.Bind(colorsSectionTitle, "ThrowablesColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 150 }));
 
-            ElectronicKeysColor = Config.Bind("Colors", "ElectronicKeysColor", new Color(1.0f, 0.01f, 0.01f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 60 }));
-            MechanicalKeysColor = Config.Bind("Colors", "MechanicalKeysColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 50 }));
+            AmmoPacksColor = Config.Bind(colorsSectionTitle, "AmmoPacksColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 140 }));
+            RoundsColor = Config.Bind(colorsSectionTitle, "RoundsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 130 }));
+            DrinksColor = Config.Bind(colorsSectionTitle, "DrinksColor", new Color(0.13f, 0.66f, 1.0f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 120 }));
+            FoodColor = Config.Bind(colorsSectionTitle, "FoodColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 110 }));
+            InjectorsColor = Config.Bind(colorsSectionTitle, "InjectorsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 100 }));
+            InjuryTreatmentColor = Config.Bind(colorsSectionTitle, "InjuryTreatmentColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 90 }));
+            MedkitsColor = Config.Bind(colorsSectionTitle, "MedkitsColor", new Color(0.3f, 1.0f, 0.13f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 80 }));
+            PillsColor = Config.Bind(colorsSectionTitle, "PillsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 70 }));
 
-            InfoItemsColor = Config.Bind("Colors", "InfoItemsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 40 }));
-            QuestItemsColor = Config.Bind("Colors", "QuestItemsColor", new Color(1.0f, 1.0f, 0.01f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 38 }));
-            SpecialEquipmentColor = Config.Bind("Colors", "SpecialEquipmentColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 30 }));
-            MapsColor = Config.Bind("Colors", "MapsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 20 }));
-            MoneyColor = Config.Bind("Colors", "MoneyColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 10 }));
+            ElectronicKeysColor = Config.Bind(colorsSectionTitle, "ElectronicKeysColor", new Color(1.0f, 0.01f, 0.01f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 60 }));
+            MechanicalKeysColor = Config.Bind(colorsSectionTitle, "MechanicalKeysColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 50 }));
+
+            InfoItemsColor = Config.Bind(colorsSectionTitle, "InfoItemsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 40 }));
+            QuestItemsColor = Config.Bind(colorsSectionTitle, "QuestItemsColor", new Color(1.0f, 1.0f, 0.01f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 38 }));
+            SpecialEquipmentColor = Config.Bind(colorsSectionTitle, "SpecialEquipmentColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 30 }));
+            MapsColor = Config.Bind(colorsSectionTitle, "MapsColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 20 }));
+            MoneyColor = Config.Bind(colorsSectionTitle, "MoneyColor", new Color(0.84f, 0.88f, 0.95f, 0.8f), new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 10 }));
 
             if (resetDefaults) ResetDefaults();
         }

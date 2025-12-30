@@ -15,6 +15,7 @@ namespace AmandsSense.Components
 
         public Color color = Settings.ObservedLootItemColor.Value;
         public Color textColor = Settings.TextColor.Value;
+        private Color outlineColor = Color.black;
 
         public SpriteRenderer spriteRenderer;
         public Sprite sprite;
@@ -75,6 +76,7 @@ namespace AmandsSense.Components
             typeText.fontSize = 0.5f;
             typeText.text = "Type";
             typeText.color = new Color(color.r, color.g, color.b, 0f);
+            AmandsSenseHelper.SetTextOutline(typeText, 0.08f, outlineColor);
 
             // SenseConstructor Name
             GameObject nameTextGameObject = new GameObject("Name");
@@ -84,6 +86,7 @@ namespace AmandsSense.Components
             nameText.fontSize = 1f;
             nameText.text = "Name";
             nameText.color = new Color(textColor.r, textColor.g, textColor.b, 0f);
+            AmandsSenseHelper.SetTextOutline(nameText, 0.125f, outlineColor);
 
             // SenseConstructor Description
             GameObject descriptionTextGameObject = new GameObject("Description");
@@ -93,6 +96,7 @@ namespace AmandsSense.Components
             descriptionText.fontSize = 0.75f;
             descriptionText.text = "";
             descriptionText.color = new Color(textColor.r, textColor.g, textColor.b, 0f);
+            AmandsSenseHelper.SetTextOutline(descriptionText, 0.1f, outlineColor);
         }
 
         protected SenseItemColor GetItemColor(Item item, SenseItemColor currentColor)
