@@ -565,7 +565,7 @@ namespace AmandsSense.Components
                         {
                             descriptionText.text = ((int)repairableComponent.Durability) + "/" + ((int)repairableComponent.MaxDurability);
                         }
-                        MagazineItemClass magazineClass = observedLootItem.Item as MagazineItemClass;
+                        Magazine magazineClass = observedLootItem.Item as Magazine;
                         if (magazineClass != null)
                         {
                             descriptionText.text = magazineClass.Count + "/" + magazineClass.MaxCount;
@@ -641,7 +641,7 @@ namespace AmandsSense.Components
             //Destroy(gameObject);
         }
 
-        private void RemoveLootItem(GEventArgs3 args)
+        private void RemoveLootItem(RemoveItemEventArgs args)
         {
             if (args.Status != CommandStatus.Succeed)
             {

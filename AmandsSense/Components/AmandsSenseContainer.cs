@@ -35,7 +35,7 @@ namespace AmandsSense.Components
                     CompoundItem lootItemClass = lootableContainer.ItemOwner.RootItem as CompoundItem;
                     if (lootItemClass != null)
                     {
-                        foreach (StashGridClass grid in lootItemClass.Grids)
+                        foreach (Grid grid in lootItemClass.Grids)
                         {
                             foreach (Item item in grid.Items)
                             {
@@ -172,7 +172,7 @@ namespace AmandsSense.Components
                     CompoundItem lootItemClass = lootableContainer.ItemOwner.RootItem as CompoundItem;
                     if (lootItemClass != null)
                     {
-                        foreach (StashGridClass grid in lootItemClass.Grids)
+                        foreach (Grid grid in lootItemClass.Grids)
                         {
                             foreach (Item item in grid.Items)
                             {

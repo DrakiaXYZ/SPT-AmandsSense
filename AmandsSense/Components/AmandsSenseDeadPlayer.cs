@@ -49,7 +49,7 @@ namespace AmandsSense.Components
                         {
                             if (item.CurrentAddress != null)
                             {
-                                if (item.Parent.Container != null && item.Parent.Container.ParentItem != null && TemplateIdToObjectMappingsClass.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(item.Parent.Container.ParentItem.GetType()))
+                                if (item.Parent.Container != null && item.Parent.Container.ParentItem != null && JsonTypes.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(item.Parent.Container.ParentItem.GetType()))
                                 {
                                     continue;
                                 }
@@ -192,7 +192,7 @@ namespace AmandsSense.Components
                         {
                             if (item.CurrentAddress != null)
                             {
-                                if (item.Parent.Container != null && item.Parent.Container.ParentItem != null && TemplateIdToObjectMappingsClass.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(item.Parent.Container.ParentItem.GetType()))
+                                if (item.Parent.Container != null && item.Parent.Container.ParentItem != null && JsonTypes.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(item.Parent.Container.ParentItem.GetType()))
                                 {
                                     continue;
                                 }

@@ -114,7 +114,7 @@ namespace AmandsSense.Components
             }
             else if (senseItemColor == SenseItemColor.NonFlea || (item.Template != null && !item.Template.CanSellOnRagfair && !AmandsSenseClass.itemsJsonClass.NonFleaExclude.Contains(item.TemplateId)))
             {
-                if (!Settings.FleaIncludeAmmo.Value && TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
+                if (!Settings.FleaIncludeAmmo.Value && JsonTypes.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(item.GetType()))
                 {
                     return senseItemColor;
                 }

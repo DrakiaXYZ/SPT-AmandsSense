@@ -1,6 +1,7 @@
 ﻿using AmandsSense.Components;
 using AmandsSense.Models;
 using EFT;
+using EFT.Ballistics;
 using HarmonyLib;
 using SPT.Reflection.Patching;
 using System.Reflection;
@@ -15,7 +16,7 @@ namespace AmandsSense.Patches
         }
 
         [PatchPostfix]
-        public static void PatchPostFix(ref Player __instance, Player aggressor, DamageInfoStruct damageInfo, EBodyPart bodyPart, EDamageType lethalDamageType)
+        public static void PatchPostFix(ref Player __instance, Player aggressor, DamageInfo damageInfo, EBodyPart bodyPart, EDamageType lethalDamageType)
         {
             AmandsSenseClass.DeadPlayers.Add(new SenseDeadPlayer(__instance, aggressor));
         }

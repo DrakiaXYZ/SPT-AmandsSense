@@ -261,175 +261,175 @@ namespace AmandsSense.Components
         }
         public static SenseItemType GetSenseItemType(Type itemType)
         {
-            if (TemplateIdToObjectMappingsClass.TypeTable["57864ada245977548638de91"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["57864ada245977548638de91"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.BuildingMaterials;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["57864a66245977548f04a81f"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["57864a66245977548f04a81f"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Electronics;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["57864ee62459775490116fc1"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["57864ee62459775490116fc1"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.EnergyElements;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["57864e4c24597754843f8723"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["57864e4c24597754843f8723"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.FlammableMaterials;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["57864c322459775490116fbf"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["57864c322459775490116fbf"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.HouseholdMaterials;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["57864c8c245977548867e7f1"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["57864c8c245977548867e7f1"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.MedicalSupplies;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["57864bb7245977548b3b66c2"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["57864bb7245977548b3b66c2"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Tools;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["57864a3d24597754843f8721"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["57864a3d24597754843f8721"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Valuables;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["590c745b86f7743cc433c5f2"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["590c745b86f7743cc433c5f2"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Others;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448e53e4bdc2d60728b4567"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448e53e4bdc2d60728b4567"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Backpacks;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448e54d4bdc2dcc718b4568"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448e54d4bdc2dcc718b4568"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.BodyArmor;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448e5724bdc2ddf718b4568"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448e5724bdc2ddf718b4568"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Eyewear;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5a341c4686f77469e155819e"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5a341c4686f77469e155819e"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Facecovers;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5a341c4086f77401f2541505"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5a341c4086f77401f2541505"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Headgear;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["57bef4c42459772e8d35a53b"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["57bef4c42459772e8d35a53b"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.GearComponents;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5b3f15d486f77432d0509248"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5b3f15d486f77432d0509248"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.GearComponents;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5645bcb74bdc2ded0b8b4578"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5645bcb74bdc2ded0b8b4578"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Headsets;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448bf274bdc2dfc2f8b456a"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.SecureContainers;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5795f317245977243854e041"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5795f317245977243854e041"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.StorageContainers;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448e5284bdc2dcb718b4567"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448e5284bdc2dcb718b4567"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.TacticalRigs;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["550aa4154bdc2dd8348b456b"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["550aa4154bdc2dd8348b456b"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.FunctionalMods;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["55802f3e4bdc2de7118b4584"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["55802f3e4bdc2de7118b4584"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.GearMods;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5a74651486f7744e73386dd1"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5a74651486f7744e73386dd1"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.GearMods;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["55802f4a4bdc2ddb688b4569"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["55802f4a4bdc2ddb688b4569"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.VitalParts;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5447e1d04bdc2dff2f8b4567"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5447e1d04bdc2dff2f8b4567"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.MeleeWeapons;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["543be6564bdc2df4348b4568"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["543be6564bdc2df4348b4568"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Throwables;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["543be5cb4bdc2deb348b4568"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["543be5cb4bdc2deb348b4568"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.AmmoPacks;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5485a8684bdc2da71d8b4567"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Rounds;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448e8d64bdc2dce718b4568"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448e8d64bdc2dce718b4568"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Drinks;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448e8d04bdc2ddf718b4569"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448e8d04bdc2ddf718b4569"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Food;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448f3a64bdc2d60728b456a"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448f3a64bdc2d60728b456a"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Injectors;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448f3ac4bdc2dce718b4569"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448f3ac4bdc2dce718b4569"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.InjuryTreatment;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448f39d4bdc2d0a728b4568"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448f39d4bdc2d0a728b4568"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Medkits;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448f3a14bdc2d27728b4569"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448f3a14bdc2d27728b4569"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Pills;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5c164d2286f774194c5e69fa"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5c164d2286f774194c5e69fa"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.ElectronicKeys;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5c99f98d86f7745c314214b3"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5c99f98d86f7745c314214b3"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.MechanicalKeys;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5448ecbe4bdc2d60728b4568"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5448ecbe4bdc2d60728b4568"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.InfoItems;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5447e0e74bdc2d3c308b4567"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5447e0e74bdc2d3c308b4567"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.SpecialEquipment;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["616eb7aea207f41933308f46"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["616eb7aea207f41933308f46"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.SpecialEquipment;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["61605ddea09d851a0a0c1bbc"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["61605ddea09d851a0a0c1bbc"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.SpecialEquipment;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["5f4fbaaca5573a5ac31db429"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["5f4fbaaca5573a5ac31db429"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.SpecialEquipment;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["567849dd4bdc2d150f8b456e"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["567849dd4bdc2d150f8b456e"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Maps;
             }
-            if (TemplateIdToObjectMappingsClass.TypeTable["543be5dd4bdc2deb348b4569"].IsAssignableFrom(itemType))
+            if (JsonTypes.TypeTable["543be5dd4bdc2deb348b4569"].IsAssignableFrom(itemType))
             {
                 return SenseItemType.Money;
             }
